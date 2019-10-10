@@ -65,7 +65,7 @@ NSURLRequest *request =[NSURLRequest requestWithURL:nsURL];
 
 ##### 方法二，8.0以上系统建议使用该方法
 ```
-WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height)];
+WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 //创建一个远程URL
 NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=7830449449"];
 //创建请求
