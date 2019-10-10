@@ -4,8 +4,7 @@
 渠道链接样式：http://taamoo.com/?utm_source=Baidu&channel=7830449449
 
 > 说明：渠道链接包含两个参数 （接入过程请勿去掉这两个参数，避免数据统计出错）
->> utm_source用来描述合作的渠道
-
+>> utm_source用来描述合作的渠道 
 >> channel用来描述合作渠道的渠道号
 
 ## Android集成
