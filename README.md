@@ -5,6 +5,7 @@
 
 > 说明：渠道链接包含两个参数 （接入过程请勿去掉这两个参数，避免数据统计出错）
 >> utm_source用来描述合作的渠道 
+
 >> channel用来描述合作渠道的渠道号
 
 ## Android集成
@@ -41,4 +42,34 @@ settings.setAppCacheMaxSize(1024 * 1024 * 8);
 settings.setJavaScriptCanOpenWindowsAutomatically(true);
 settings.setDefaultTextEncodingName("UTF-8");
 settings.setTextSize(WebSettings.TextSize.NORMAL);
+```
+
+
+
+
+
+
+## IOS集成
+### 方法一，适用于8.0以下系统
+```
+UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+
+//创建一个远程URL
+NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=7830449449"];  
+
+//创建Request
+NSURLRequest *request =[NSURLRequest requestWithURL:nsURL];
+//加载网页
+[webView loadRequest:request];
+```
+
+### 方法二，8.0以上系统建议使用该方法
+```
+WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height)];
+//创建一个远程URL
+NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=7830449449"];
+//创建请求
+NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:nsURL];
+//加载网页
+[webView loadRequest:request];
 ```
