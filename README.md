@@ -8,21 +8,19 @@
 
 >> channel用来描述合作渠道的渠道号
 
-## 2.Android集成
+## Android集成
 ```
 String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=7830449449";
-/**
- * 定义WebView 用于加载显示小游戏中心
- */
+
+//定义WebView 用于加载显示小游戏中心
 WebView webView = new WebView(this);
-/**
- * 设置自身浏览器，注意：可用把WebView理解为浏览器，设置new WebViewClient()后，手机就不会跳转其他的浏览器
- */
+
+//设置自身浏览器，注意：可用把WebView理解为浏览器，设置new WebViewClient()后，手机就不会跳转其他的浏览器
 webView.setWebViewClient(new WebViewClient());
-/**
- * 加载TaaMoo游戏中心
- */
+
+//加载TaaMoo游戏中心
 webView.loadUrl(taamooUrl);
+
 //以下配置用于webview缓存，以及允许JS代码执行，请务必设置，保证游戏正常运行。
 WebSettings webSettings = webView.getSettings();
 webSettings.setJavaScriptEnabled(true);
