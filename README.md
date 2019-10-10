@@ -9,11 +9,12 @@
 >> channel用来描述合作渠道的渠道号
 
 ## 2.Android集成
-'String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=7830449449";
+```
+String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=7830449449";
 WebView webView = new WebView(this);
 webView.setWebViewClient(new WebViewClient());
 webView.loadUrl(taamooUrl);
-
+//以下配置请勿忽略
 WebSettings webSettings = webView.getSettings();
 webSettings.setJavaScriptEnabled(true);
 settings.setJavaScriptEnabled(true);
@@ -32,4 +33,5 @@ settings.setAllowFileAccess(true);
 settings.setAppCacheMaxSize(1024 * 1024 * 8);
 settings.setJavaScriptCanOpenWindowsAutomatically(true);
 settings.setDefaultTextEncodingName("UTF-8");
-settings.setTextSize(WebSettings.TextSize.NORMAL);'
+settings.setTextSize(WebSettings.TextSize.NORMAL);
+```
