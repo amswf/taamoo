@@ -50,7 +50,7 @@ settings.setTextSize(WebSettings.TextSize.NORMAL);
 
 
 ## IOS集成
-### 方法一，适用于8.0以下系统
+##### 方法一，适用于8.0以下系统
 ```
 UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 
@@ -63,7 +63,7 @@ NSURLRequest *request =[NSURLRequest requestWithURL:nsURL];
 [webView loadRequest:request];
 ```
 
-### 方法二，8.0以上系统建议使用该方法
+##### 方法二，8.0以上系统建议使用该方法
 ```
 WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, self.view.frame.size.height)];
 //创建一个远程URL
