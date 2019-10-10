@@ -9,7 +9,7 @@
 >> channel用来描述合作渠道的渠道号
 
 ## 2.Android集成
-'/**
+>/**
  * 定义此WebView 用于去展现网络上的网页
  */
 WebView webView = new WebView(this);
