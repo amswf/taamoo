@@ -9,11 +9,27 @@
 >> channel用来描述合作渠道的渠道号
 
 ## 2.Android集成
->/**
- * 定义此WebView 用于去展现网络上的网页
- */
+'String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=7830449449";
 WebView webView = new WebView(this);
-/**
- * 通过此WebView 获取到 WebSettings ，通过WebSettings设置WebView
- */
-WebSettings webSettings = webView.getSettings();'
+webView.setWebViewClient(new WebViewClient());
+webView.loadUrl(taamooUrl);
+
+WebSettings webSettings = webView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+settings.setJavaScriptEnabled(true);
+settings.setBuiltInZoomControls(true);
+settings.setUseWideViewPort(true);
+settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+settings.setLoadWithOverviewMode(true);
+settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+settings.setAppCacheEnabled(true);
+String appCachePath = this.getApplicationContext().getCacheDir().getPath() + File.separator + "games";
+settings.setAppCachePath(appCachePath);
+settings.setDatabaseEnabled(true);
+settings.setDatabasePath(appCachePath);
+settings.setDomStorageEnabled(true);
+settings.setAllowFileAccess(true);
+settings.setAppCacheMaxSize(1024 * 1024 * 8);
+settings.setJavaScriptCanOpenWindowsAutomatically(true);
+settings.setDefaultTextEncodingName("UTF-8");
+settings.setTextSize(WebSettings.TextSize.NORMAL);'
