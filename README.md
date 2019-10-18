@@ -73,3 +73,13 @@ NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:nsURL];
 //加载网页
 [webView loadRequest:request];
 ```
+> 注意：在使用WKWebView的时候，必须实现WkUIDelegate，否则可能导致游戏广告无法点击。实现方式如下：
+```
+-(WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
+}
+```
