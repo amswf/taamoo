@@ -3,10 +3,10 @@
 ## 1.获取渠道链接（请咨询TaaMoo技术支持，微信：engliuo）
 渠道链接样式：http://taamoo.com/?utm_source=Baidu&channel=7830449449
 
-> 说明：渠道链接包含两个参数 （接入过程请勿去掉这两个参数，避免数据统计出错）
->> utm_source用来描述合作的渠道 
+> 注意1：渠道链接包含utm_source和channel两个参数 （接入过程请勿去掉这两个参数，避免数据统计出错）
+> 注意2：当用户点击游戏或者广告时候，进入新的页面，App要处理好返回逻辑，避免用户进入页面后不知道如何关闭。
+> 注意3：谷歌广告请不要轻易点击，避免因为恶意误点，导致广告账户被封。上线前请及时通知TaaMoo的工作人员，做好上线前的测试工作。
 
->> channel用来描述合作渠道的渠道号
 
 ## Android集成
 >> 
@@ -44,11 +44,6 @@ settings.setDefaultTextEncodingName("UTF-8");
 settings.setTextSize(WebSettings.TextSize.NORMAL);
 ```
 
-
-
-
-
-
 ## IOS集成
 ##### 方法一，适用于8.0以下系统
 ```
@@ -83,6 +78,3 @@ NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:nsURL];
     return nil;
 }
 ```
-> 注意：
-1.当用户点击游戏或者广告时候，进入新的页面，App要处理好返回逻辑，避免用户进入页面后不知道如何关闭。
-2.谷歌广告请不要轻易点击，避免因为恶意误点，导致广告账户被封。
