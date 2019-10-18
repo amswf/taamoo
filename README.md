@@ -1,7 +1,7 @@
 # TaaMoo小游戏平台对接文档
 
 ## 1.获取渠道链接（请咨询TaaMoo技术支持，微信：engliuo）
-渠道链接样式：http://taamoo.com/?utm_source=Baidu&channel=7830449449
+渠道链接样式：http://taamoo.com/?utm_source=Baidu&channel=3173732176
 
 
 ## 2.注意事项
@@ -14,7 +14,7 @@
 ### Android集成
 >> 
 ```
-String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=7830449449";
+String taamooUrl = "http://taamoo.com/?utm_source=Baidu&channel=3173732176";
 
 //定义WebView 用于加载显示小游戏中心
 WebView webView = new WebView(this);
@@ -53,7 +53,7 @@ settings.setTextSize(WebSettings.TextSize.NORMAL);
 UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 
 //创建一个远程URL
-NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=7830449449"];  
+NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=3173732176"];  
 
 //创建Request
 NSURLRequest *request =[NSURLRequest requestWithURL:nsURL];
@@ -65,7 +65,7 @@ NSURLRequest *request =[NSURLRequest requestWithURL:nsURL];
 ```
 WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
 //创建一个远程URL
-NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=7830449449"];
+NSURL *nsURL = [NSURL URLWithString:@"http://taamoo.com/?utm_source=Baidu&channel=3173732176"];
 //创建请求
 NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:nsURL];
 //加载网页
