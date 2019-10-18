@@ -83,3 +83,6 @@ NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:nsURL];
     return nil;
 }
 ```
+> 注意：
+1.当用户点击游戏或者广告时候，进入新的页面，App要处理好返回逻辑，避免用户进入页面后不知道如何关闭。
+2.谷歌广告请不要轻易点击，避免因为恶意误点，导致广告账户被封。
