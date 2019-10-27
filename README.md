@@ -26,8 +26,7 @@ webView.setWebViewClient(new WebViewClient());
 webView.loadUrl(taamooUrl);
 
 //以下配置用于webview缓存，以及允许JS代码执行，请务必设置，保证游戏正常运行。
-WebSettings webSettings = webView.getSettings();
-webSettings.setJavaScriptEnabled(true);
+WebSettings settings = webView.getSettings();
 settings.setJavaScriptEnabled(true);
 settings.setBuiltInZoomControls(true);
 settings.setUseWideViewPort(true);
