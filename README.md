@@ -1,6 +1,6 @@
 # TaaMoo小游戏平台对接文档
 
-## 1.获取渠道链接（请咨询TaaMoo技术支持，微信：engliuo）
+## 1.获取渠道链接（请咨询TaaMoo技术支持，微信：fbyeye）
 渠道链接样式：http://taamoo.com/?utm_source=Baidu&channel=3173732176
 
 
