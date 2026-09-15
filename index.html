@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiny Garden — cozy games, hand-crafted</title>
+<meta name="description" content="Tiny Garden is an independent game studio making gentle, hand-crafted mobile games. Our first title, Tendril, is out now on the App Store.">
+<style>
+  :root{
+    --paper:#FFF8EC; --ink:#3A3226; --dim:#8A7E66; --coral:#F07A5A; --leaf:#5E9B5C;
+    --gold:#F5B840; --cream:#FFFDF6; --violet:#7C6CE0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{font-family:ui-rounded,-apple-system,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+    color:var(--ink);background:var(--paper);
+    background-image:radial-gradient(90% 40% at 50% -5%,rgba(245,184,64,.14),transparent),
+      radial-gradient(70% 40% at 100% 100%,rgba(94,155,92,.1),transparent)}
+  a{color:inherit}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 24px}
+
+  header{position:sticky;top:0;z-index:10;background:rgba(255,248,236,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(58,50,38,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:1020px;margin:0 auto}
+  .logo{font-weight:900;font-size:20px;letter-spacing:.02em;text-decoration:none;display:flex;align-items:center;gap:9px}
+  .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 3px rgba(240,122,90,.2)}
+  .nav-links{display:flex;gap:6px}
+  .nav-links a{text-decoration:none;font-weight:700;font-size:14.5px;color:var(--dim);padding:8px 14px;border-radius:999px;transition:.15s}
+  .nav-links a:hover{color:var(--ink);background:rgba(58,50,38,.06)}
+
+  .hero{padding:84px 0 66px;text-align:center}
+  .hero h1{font-size:clamp(40px,7vw,64px);font-weight:900;letter-spacing:-.01em;line-height:1.05}
+  .hero h1 em{font-style:normal;color:var(--coral)}
+  .hero p{margin:18px auto 0;max-width:560px;font-size:18px;font-weight:600;color:var(--dim)}
+  .hero .cta{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:800;font-size:16px;
+    padding:14px 26px;border-radius:18px;transition:transform .1s,box-shadow .1s}
+  .btn:active{transform:translateY(2px)}
+  .btn.dark{background:var(--ink);color:var(--paper);box-shadow:0 4px 0 rgba(0,0,0,.2)}
+  .btn.leaf{background:linear-gradient(180deg,#8BC184,var(--leaf));color:#fff;box-shadow:0 4px 0 rgba(46,90,45,.35)}
+  .btn.ghost{border:2px solid rgba(58,50,38,.15);color:var(--ink)}
+  .hero-art{margin:44px auto 0;display:flex;justify-content:center;gap:0;align-items:flex-end}
+  .vine{width:9px;border-radius:99px;background:linear-gradient(180deg,#8BC184,#5E9B5C);position:relative}
+  .vine::before,.vine::after{content:"";position:absolute;width:20px;height:9px;border-radius:99px;background:#6FA96B}
+  .hero-note{margin-top:14px;font-size:13px;color:var(--dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+  section{padding:64px 0}
+  .sec-title{font-size:30px;font-weight:900;text-align:center;margin-bottom:8px}
+  .sec-sub{text-align:center;color:var(--dim);font-weight:600;margin-bottom:36px}
+
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;
+    background:var(--cream);border:1px solid rgba(58,50,38,.1);border-radius:32px;padding:36px;
+    box-shadow:0 24px 60px rgba(58,50,38,.1)}
+  .feature .art{background:linear-gradient(160deg,#FFD6A5,#8ECFCB);border-radius:24px;aspect-ratio:1/1.1;
+    display:flex;align-items:center;justify-content:center;font-size:110px;box-shadow:inset 0 0 60px rgba(255,255,255,.35)}
+  .feature h3{font-size:34px;font-weight:900;letter-spacing:.06em}
+  .feature .genre{font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:6px 0 14px}
+  .feature p{font-size:15.5px;line-height:1.7;color:#5A5240;font-weight:500}
+  .feature ul{list-style:none;margin:16px 0 22px;display:flex;flex-direction:column;gap:8px}
+  .feature li{font-size:14.5px;font-weight:700;color:#43503E;display:flex;gap:8px;align-items:baseline}
+  .feature li::before{content:"✿";color:var(--coral)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  .card{background:var(--cream);border:1px solid rgba(58,50,38,.1);border-radius:22px;padding:22px;text-align:center;
+    transition:transform .15s}
+  .card:hover{transform:translateY(-4px)}
+  .card .ico{font-size:44px}
+  .card h4{font-size:17px;font-weight:900;margin-top:10px;letter-spacing:.05em}
+  .card span{display:block;font-size:12px;color:var(--dim);font-weight:700;margin-top:5px;letter-spacing:.08em;text-transform:uppercase}
+  .soon{display:inline-block;margin-top:12px;font-size:11.5px;font-weight:800;color:#8A6A10;background:rgba(245,184,64,.18);
+    border:1px solid rgba(245,184,64,.4);padding:4px 12px;border-radius:999px}
+
+  .support{background:var(--cream);border:1px solid rgba(58,50,38,.1);border-radius:32px;padding:36px}
+  .support h3{font-size:20px;font-weight:900;margin-bottom:6px}
+  .support p{font-size:15px;color:#5A5240;font-weight:500;line-height:1.6}
+  .support a{color:var(--coral);font-weight:800}
+  .faq{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+  details{background:var(--paper);border:1px solid rgba(58,50,38,.1);border-radius:16px;padding:14px 18px}
+  summary{font-weight:800;font-size:14.5px;cursor:pointer}
+  details p{margin-top:8px;font-size:14px}
+
+  footer{border-top:1px solid rgba(58,50,38,.1);margin-top:56px;padding:28px 0 42px;text-align:center;
+    font-size:13.5px;color:var(--dim);font-weight:600}
+  footer nav{display:flex;gap:18px;justify-content:center;margin-bottom:10px}
+  footer a{text-decoration:none;color:var(--ink);font-weight:700}
+  footer a:hover{color:var(--coral)}
+
+  @media(max-width:720px){
+    .feature{grid-template-columns:1fr}
+    .nav-links a:not(:last-child){display:none}
+    .hero{padding:56px 0 40px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <a class="logo" href="/"><span class="dot"></span>Tiny Garden</a>
+    <nav class="nav-links">
+      <a href="#games">Games</a>
+      <a href="#support">Support</a>
+      <a href="/privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Cozy games,<br><em>hand-crafted</em> 🌱</h1>
+    <p>Tiny Garden is an independent studio making gentle, one-thumb mobile games — the kind you play to breathe out, not to stress out.</p>
+    <div class="cta">
+      <a class="btn leaf" href="#games">🎮&nbsp; Our games</a>
+      <a class="btn ghost" href="#support">✉️&nbsp; Contact us</a>
+    </div>
+    <div class="hero-art">
+      <div class="vine" style="height:150px"></div>
+      <div class="vine" style="height:210px;margin:0 26px"></div>
+      <div class="vine" style="height:120px"></div>
+    </div>
+    <div class="hero-note">grow gently · graze bravely</div>
+  </div>
+
+  <section id="games">
+    <div class="sec-title">Our games</div>
+    <div class="sec-sub">Quality over quantity — every game is designed, drawn and tuned by hand.</div>
+
+    <div class="feature">
+      <div class="art">🌱</div>
+      <div>
+        <h3>TENDRIL</h3>
+        <div class="genre">Cozy arcade · iOS</div>
+        <p>A little vine grows upward — forever. Steer it past drifting thorns, graze close for bloom bonuses, and turn your best runs into a living garden that sways behind your menu.</p>
+        <ul>
+          <li>One-thumb controls, endlessly relaxing</li>
+          <li>Daily Garden — the same seeded challenge worldwide</li>
+          <li>10 hand-crafted vine skins &amp; daily missions</li>
+          <li>Your best runs live on as a blooming garden</li>
+        </ul>
+        <a class="btn dark" id="appstore-link" href="https://apps.apple.com/" target="_blank" rel="noopener">
+           Download on the App Store</a>
+      </div>
+    </div>
+
+    <div style="margin-top:34px" class="grid">
+      <div class="card"><div class="ico">🌙</div><h4>LUNAR GOLF</h4><span>gravity golf</span><div class="soon">COMING SOON</div></div>
+      <div class="card"><div class="ico">📡</div><h4>SONAR</h4><span>echo maze</span><div class="soon">COMING SOON</div></div>
+      <div class="card"><div class="ico">🪀</div><h4>YOYO</h4><span>pendulum arcade</span><div class="soon">COMING SOON</div></div>
+      <div class="card"><div class="ico">🁫</div><h4>DOMINO</h4><span>chain puzzle</span><div class="soon">COMING SOON</div></div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="sec-title">Support</div>
+    <div class="sec-sub">We read every message. Usually reply within a day or two.</div>
+    <div class="support">
+      <h3>✉️ Get in touch</h3>
+      <p>Questions, bug reports, or just want to say hi: <a href="mailto:support@taamoo.com">support@taamoo.com</a>
+        &nbsp;·&nbsp; <a href="mailto:zhengshuo@qq.com">zhengshuo@qq.com</a></p>
+      <div class="faq">
+        <details>
+          <summary>Tendril: how do I steer the vine?</summary>
+          <p>Touch and hold the left or right half of the screen — the vine bends toward your thumb. Release and it straightens up on its own.</p>
+        </details>
+        <details>
+          <summary>What is the Daily Garden?</summary>
+          <p>Every day all players get the same seeded garden with 3 attempts. Your best distance earns a star rating you can share as a card. It resets at midnight UTC.</p>
+        </details>
+        <details>
+          <summary>How do I earn ☀ sunlight?</summary>
+          <p>Catch sun orbs, graze past thorns, finish daily missions and keep your daily streak alive — the longer the streak, the bigger the multiplier.</p>
+        </details>
+        <details>
+          <summary>I deleted the app — is my garden gone?</summary>
+          <p>Yes, progress is stored locally on your device only. We can't restore it, but every vine you grow is a fresh start 🌱</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <nav>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/support.html">Support</a>
+      <a href="mailto:support@taamoo.com">support@taamoo.com</a>
+    </nav>
+    © 2026 Tiny Garden · made with 🌱 in the garden
+  </footer>
+</div>
+</body>
+</html>
