@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#12102E">
+<title>LUNAR GOLF — golf across the solar system</title>
+<style>
+  :root{
+    --ink:#EDEBFF; --dim:#8E8AB8; --gold:#FFC857; --coral:#FF6B6B; --card:rgba(18,16,46,.9);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  html,body{height:100%;overflow:hidden;background:#07061A;overscroll-behavior:none}
+  body{font-family:ui-rounded,-apple-system,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;color:var(--ink)}
+  #stage{position:fixed;inset:0;margin:0 auto;max-width:520px;background:#12102E;touch-action:none;overflow:hidden}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:calc(20px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+    transition:opacity .28s ease,transform .28s ease;z-index:5}
+  .screen.hidden{opacity:0;pointer-events:none;transform:scale(1.04)}
+  .btn{border:none;cursor:pointer;font-family:inherit;color:#fff;font-weight:800;font-size:19px;letter-spacing:.03em;
+    padding:16px 22px;border-radius:20px;background:linear-gradient(180deg,#9A8CF0,#6C5CE7);
+    box-shadow:0 6px 0 rgba(0,0,0,.3),0 14px 30px rgba(108,92,231,.4);transition:transform .08s ease;
+    display:flex;align-items:center;justify-content:center;gap:10px;min-width:230px}
+  .btn:active{transform:translateY(4px) scale(.98)}
+  .btn.ghost{background:rgba(255,255,255,.09);box-shadow:0 4px 0 rgba(0,0,0,.25);font-weight:700}
+  .btn.small{min-width:0;padding:12px 18px;font-size:16px;border-radius:16px}
+  .iconbtn{width:46px;height:46px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);
+    color:var(--ink);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .08s}
+  .iconbtn:active{transform:scale(.92)}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
+    padding:8px 14px;border-radius:999px;font-size:14px;font-weight:700;color:var(--dim)}
+  .chip b{color:var(--ink)}
+
+  #menu{justify-content:space-between;background:radial-gradient(130% 60% at 50% 112%,rgba(108,92,231,.2),transparent 60%)}
+  #logo{font-size:clamp(42px,11.5vw,58px);font-weight:900;letter-spacing:.04em;line-height:1.05;text-align:center;
+    background:linear-gradient(180deg,#FFFFFF 15%,#B8A8FF);-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 6px 22px rgba(140,120,255,.45))}
+  #tagline{margin-top:10px;font-size:13px;font-weight:700;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;text-align:center}
+  #menu-top,#menu-mid{display:flex;flex-direction:column;align-items:center}
+  #menu-mid{gap:16px}
+  #menu-bottom{display:flex;gap:12px}
+  #howto-link{background:none;border:none;color:var(--dim);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;
+    text-decoration:underline;text-underline-offset:4px}
+
+  #hud{position:absolute;top:0;left:0;right:0;padding:calc(12px + env(safe-area-inset-top)) 16px 10px;z-index:4;
+    display:none;flex-direction:column;align-items:center;gap:7px;pointer-events:none}
+  #hud.show{display:flex}
+  #hud-row{display:flex;gap:8px;align-items:center}
+  .hudchip{background:rgba(10,8,30,.72);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 13px;
+    font-size:13px;font-weight:800}
+  .hudchip span{color:var(--dim);font-weight:700}
+  #world-name{font-size:14px;font-weight:900;letter-spacing:.22em;color:var(--gold)}
+  #btn-quit{position:absolute;left:14px;top:calc(12px + env(safe-area-inset-top));pointer-events:auto}
+  #btn-hint{position:absolute;right:14px;top:calc(12px + env(safe-area-inset-top));pointer-events:auto}
+
+  #banner,#summary{background:rgba(4,3,15,.6);backdrop-filter:blur(2px)}
+  .card{width:min(86%,340px);background:var(--card);border:1px solid rgba(255,255,255,.09);border-radius:26px;
+    padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;
+    box-shadow:0 30px 60px rgba(0,0,0,.5)}
+  #res-name{font-size:34px;font-weight:900}
+  #res-stars{font-size:30px;letter-spacing:6px;min-height:36px}
+  #res-detail{font-size:14px;color:var(--dim);font-weight:700}
+  #sum-diff{font-size:52px;font-weight:900;line-height:1}
+  #sum-sub{font-size:13px;color:var(--dim);font-weight:700}
+  #grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:30px;margin:2px 0}
+
+  #howto{background:rgba(4,3,15,.7);backdrop-filter:blur(4px)}
+  #howto-card{width:min(86%,340px);background:var(--card);border-radius:26px;padding:26px 22px;display:flex;flex-direction:column;gap:18px}
+  #howto-card h2{font-size:22px;font-weight:900;text-align:center}
+  .step{display:flex;align-items:center;gap:14px}
+  .step svg{flex:0 0 44px}
+  .step p{font-size:14px;font-weight:600;color:var(--dim);line-height:1.45}
+  .step p b{color:var(--ink)}
+
+  #ad{position:absolute;inset:0;z-index:20;background:rgba(3,2,10,.92);display:flex;align-items:center;justify-content:center}
+  #ad.hidden{display:none}
+  #ad-box{width:min(84%,340px);border-radius:24px;background:linear-gradient(160deg,#221E4A,#141230);
+    border:1px dashed rgba(255,255,255,.25);padding:26px 22px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  #ad-tag{font-size:11px;font-weight:900;letter-spacing:.3em;color:var(--dim);border:1px solid rgba(255,255,255,.2);padding:5px 12px;border-radius:999px}
+  #ad-title{font-size:20px;font-weight:800}
+  #ad-sub{font-size:13px;color:var(--dim);font-weight:600;line-height:1.5}
+  #ad-claim{opacity:.4;pointer-events:none}
+  #ad-claim.ready{opacity:1;pointer-events:auto}
+  #toast{position:absolute;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(16px);
+    background:rgba(16,14,40,.94);border:1px solid rgba(255,255,255,.12);padding:11px 18px;border-radius:14px;font-size:14px;
+    font-weight:700;opacity:0;transition:all .25s;z-index:15;pointer-events:none;white-space:nowrap}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="stage">
+<script>
+  if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    try { window.Capacitor.Plugins.StatusBar.hide(); } catch(e){}
+  }
+</script>
+  <canvas id="cv"></canvas>
+
+  <div id="hud">
+    <button id="btn-quit" class="iconbtn">⌂</button>
+    <div id="world-name">MOON · g = 1.62</div>
+    <div id="hud-row">
+      <div class="hudchip"><span>HOLE</span> <b id="hud-hole">1/12</b></div>
+      <div class="hudchip"><span>PAR</span> <b id="hud-par">3</b></div>
+      <div class="hudchip"><span>SHOTS</span> <b id="hud-strokes">0</b></div>
+    </div>
+  </div>
+  <button id="btn-hint" class="iconbtn" style="display:none">◎</button>
+
+  <div id="menu" class="screen">
+    <div id="menu-top">
+      <div id="logo">LUNAR<br>GOLF</div>
+      <div id="tagline">golf across the solar system</div>
+    </div>
+    <div id="menu-mid">
+      <button id="btn-play" class="btn">🏌️&nbsp; LAUNCH</button>
+      <div class="chip">BEST&nbsp;<b id="menu-best">—</b>&nbsp;·&nbsp;STARS&nbsp;<b id="menu-stars">0</b>/36</div>
+      <button id="howto-link">how to play</button>
+    </div>
+    <div id="menu-bottom">
+      <button id="menu-mute" class="iconbtn">🔊</button>
+      <button id="menu-share" class="iconbtn">↗</button>
+    </div>
+  </div>
+
+  <div id="banner" class="screen hidden">
+    <div class="card">
+      <div id="res-name">BIRDIE!</div>
+      <div id="res-stars">⭐⭐</div>
+      <div id="res-detail">2 shots · par 3</div>
+      <button id="btn-next" class="btn">NEXT HOLE</button>
+    </div>
+  </div>
+
+  <div id="summary" class="screen hidden">
+    <div class="card">
+      <div style="font-size:15px;font-weight:900;letter-spacing:.26em;color:var(--gold)">TOUR COMPLETE</div>
+      <div id="sum-diff">+4</div>
+      <div id="sum-sub">23 shots · par 30 · 22⭐</div>
+      <div id="grid"></div>
+      <button id="btn-share" class="btn small" style="background:linear-gradient(180deg,#5EE6A8,#2FBF83)">SHARE RESULT</button>
+      <button id="btn-home" class="btn small ghost">MENU</button>
+    </div>
+  </div>
+
+  <div id="howto" class="screen hidden">
+    <div id="howto-card">
+      <h2>How to play</h2>
+      <div class="step">
+        <svg viewBox="0 0 44 44" width="44" height="44"><circle cx="14" cy="30" r="5" fill="#fff"/><path d="M16 26 L32 10" stroke="#FFC857" stroke-width="3" stroke-dasharray="3 4" stroke-linecap="round"/><path d="M28 8 L34 8 L32 15 Z" fill="#FFC857"/></svg>
+        <p><b>Drag &amp; release</b> like a slingshot. The dotted arc predicts your shot in local gravity.</p>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 44 44" width="44" height="44"><path d="M4 34 Q22 10 40 30" stroke="#B8A8FF" stroke-width="2.5" fill="none" stroke-dasharray="4 4"/><circle cx="4" cy="34" r="4" fill="#fff"/><circle cx="40" cy="30" r="4" fill="#FFC857"/></svg>
+        <p><b>Gravity changes everything.</b> Moon floats, Jupiter slams. Plan your arcs!</p>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 44 44" width="44" height="44"><circle cx="20" cy="30" r="6" fill="#101E17"/><path d="M20 26 L20 8" stroke="#EDEBFF" stroke-width="2.5"/><path d="M20 8 L33 12 L20 17 Z" fill="#FF6B6B"/></svg>
+        <p>Land gently in the <b>flag cup</b>. Fewer shots = more stars. Bumpers are your friends!</p>
+      </div>
+      <button id="howto-ok" class="btn small ghost" style="align-self:center">GOT IT</button>
+    </div>
+  </div>
+
+  <div id="ad" class="hidden">
+    <div id="ad-box">
+      <div id="ad-tag">TEST AD</div>
+      <div id="ad-title">Advertisement</div>
+      <div id="ad-sub">This placeholder stands in for AdMob.</div>
+      <button id="ad-claim" class="btn small">CLAIM REWARD</button>
+      <button id="ad-close" class="btn small ghost">SKIP</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+'use strict';
+/* =====================================================================
+   LUNAR GOLF — flick golf across worlds with wildly different gravity.
+   12 holes · 4 worlds (Moon 0.17g / Mars 0.38g / Earth 1g / Jupiter 2.4g)
+   Single-file HTML5 → Capacitor shell for iOS/Android.
+   ===================================================================== */
+const $=s=>document.querySelector(s);
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const TAU=Math.PI*2;
+const store={
+  get(k,d){try{const v=localStorage.getItem('lg:'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem('lg:'+k,JSON.stringify(v));}catch(e){}}
+};
+const hap=p=>{try{navigator.vibrate&&navigator.vibrate(p);}catch(e){}};
+function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}
+  return ()=>{h=Math.imul(h^(h>>>16),2246822507);h=Math.imul(h^(h>>>13),3266489909);return (h^=h>>>16)>>>0;};}
+function mulberry32(a){return ()=>{a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);
+  t=(t+Math.imul(t^(t>>>7),61|t))^t;return ((t^(t>>>14))>>>0)/4294967296;};}
+
+/* ---------- audio ---------- */
+const Sfx={
+  ctx:null,on:store.get('sound',true),
+  ensure(){if(!this.ctx){try{this.ctx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return;}}
+    if(this.ctx.state==='suspended')this.ctx.resume();},
+  tone(f,dur,type='sine',vol=.18,slide=null,delay=0){
+    if(!this.on||!this.ctx)return;
+    const t0=this.ctx.currentTime+delay,o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type=type;o.frequency.setValueAtTime(f,t0);
+    if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,slide),t0+dur);
+    g.gain.setValueAtTime(vol,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+    o.connect(g).connect(this.ctx.destination);o.start(t0);o.stop(t0+dur+.05);},
+  noise(dur,vol=.2,from=900,to=180,type='bandpass'){
+    if(!this.on||!this.ctx)return;
+    const t0=this.ctx.currentTime,n=Math.floor(this.ctx.sampleRate*dur);
+    const buf=this.ctx.createBuffer(1,n,this.ctx.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+    const src=this.ctx.createBufferSource();src.buffer=buf;
+    const f=this.ctx.createBiquadFilter();f.type=type;f.Q.value=.8;
+    f.frequency.setValueAtTime(from,t0);f.frequency.exponentialRampToValueAtTime(Math.max(40,to),t0+dur);
+    const g=this.ctx.createGain();g.gain.setValueAtTime(vol,t0);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+    src.connect(f).connect(g).connect(this.ctx.destination);src.start(t0);},
+  putt(pw){this.noise(.09,.12+.14*pw,320,80,'lowpass');this.tone(150,.07,'triangle',.12+.1*pw,90);},
+  land(v){this.noise(.05,Math.min(.1,v/3000),500,150,'lowpass');},
+  bumper(){this.tone(340,.08,'square',.12,220);},
+  sink(){[523,659,784,1047].forEach((f,i)=>this.tone(f,.16,'triangle',.18,null,i*.08));},
+  oob(){this.tone(220,.25,'sine',.15,110);},
+  ui(){this.tone(620,.04,'square',.05);},
+  star(){this.tone(880,.1,'triangle',.12);this.tone(1320,.14,'triangle',.1,null,.08);}
+};
+document.addEventListener('visibilitychange',()=>{
+  if(!Sfx.ctx)return;
+  document.hidden?Sfx.ctx.suspend():(Sfx.on&&Sfx.ctx.resume());
+});
+
+/* ---------- ads ---------- */
+const Ads={
+  runsSince:0,lastShown:0,
+  shouldInterstitial(){return this.runsSince>=2&&Date.now()-this.lastShown>60000;},
+  maybeInterstitial(done){
+    if(!this.shouldInterstitial()){done();return;}
+    this.runsSince=0;this.lastShown=Date.now();this._demo({rewarded:false,done});},
+  showRewarded(onReward,onSkip){this._demo({rewarded:true,onReward,onSkip});},
+  _demo({rewarded,done,onReward,onSkip}){
+    const el=$('#ad'),claim=$('#ad-claim'),close=$('#ad-close'),sub=$('#ad-sub'),title=$('#ad-title');
+    el.classList.remove('hidden');claim.classList.remove('ready');
+    close.style.visibility=rewarded?'visible':'hidden';
+    title.textContent=rewarded?'Rewarded ad':'Interstitial';
+    sub.textContent=rewarded?'Watch to earn your reward.':'Back to the course in a moment…';
+    let t=0;const timer=setInterval(tick,700);let ended=false;
+    function tick(){t++;
+      if(rewarded){const l=3-t;sub.innerHTML=l>0?`Reward in <b>${l}</b>…`:'Reward unlocked! 🎁';if(t>=3)claim.classList.add('ready');}
+      if(!rewarded&&t>=2)end(true);}
+    function end(grant){if(ended)return;ended=true;clearInterval(timer);el.classList.add('hidden');
+      claim.onclick=close.onclick=null;
+      if(rewarded)(grant?onReward:onSkip)?.();else done?.();}
+    claim.onclick=()=>{Sfx.ui();end(true);};
+    close.onclick=()=>{Sfx.ui();end(false);};
+    tick();}
+};
+
+/* ---------- worlds & holes ---------- */
+const WORLDS=[
+  {name:'MOON',   g:95,  vmax:270, sky:['#0B0B26','#251A4A'], ground:'#565B73', accent:'#B8A8FF', fact:'g = 1.62 m/s²'},
+  {name:'MARS',   g:210, vmax:400, sky:['#3A1622','#8A3B2C'], ground:'#A85A3B', accent:'#FF9B6B', fact:'g = 3.71 m/s²'},
+  {name:'EARTH',  g:520, vmax:620, sky:['#7EC8C0','#EAF7EE'], ground:'#4E8F5B', accent:'#2FBF83', fact:'g = 9.81 m/s²'},
+  {name:'JUPITER',g:1100,vmax:900, sky:['#2A1E3A','#7A4A38'], ground:'#8A6A50', accent:'#FFC857', fact:'g = 24.79 m/s²'}
+];
+const HOLES=12; // 3 per world
+let seedT=store.get('seed',0); // fixed tour, or 0 → daily-style fixed seed
+
+const stage=$('#stage'),cv=$('#cv'),ctx=cv.getContext('2d');
+let W=0,H=0,dpr=1;
+function resize(){
+  W=stage.clientWidth;H=stage.clientHeight;
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=W*dpr;cv.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  if(terr) buildTerrainCache();
+}
+window.addEventListener('resize',resize);
+
+/* ---------- course model ---------- */
+let holeIdx=0,worldIdx=0,results=[],roundActive=false;
+let terr=null,terrPts=[],tCache=null;
+let ball=null,shots=0,done=false,aiming=false,aimStart=null,aimNow=null,sight=false,sightUsed=false;
+let confetti=[],tGlobal=0,state='menu',pendingStart=null,sinkT=-1;
+let bestDiff=store.get('best',null),totalStars=store.get('stars',0);
+
+function buildHole(i){
+  worldIdx=Math.floor(i/3);
+  const w=WORLDS[worldIdx];
+  const rng=mulberry32(20260911+i*7919);
+  const C={top:90};
+  const groundY=()=>H*.66;
+  // heightmap: base sines + features; tee flat at left, cup plateau somewhere right
+  const pts=[];
+  const n=Math.ceil(W/8)+1;
+  const a1=.10+rng()*.06, a2=.05+rng()*.04, f1=1+rng()*1.2, f2=2.2+rng()*2, ph=rng()*TAU, ph2=rng()*TAU;
+  const cupX=W*.55+rng()*W*.32;
+  const bumpers=[];
+  const nb=worldIdx===3?2:(rng()<.6?1:0);
+  for(let b=0;b<nb;b++) bumpers.push({x:W*.3+rng()*W*.55,r:11+rng()*6,ph:rng()*TAU});
+  const craterX=W*.35+rng()*W*.4, craterW=50+rng()*60, craterD=26+rng()*30;
+  for(let k=0;k<n;k++){
+    const x=k*8;
+    let y=groundY()
+      + Math.sin(x/W*TAU*f1+ph)*H*a1
+      + Math.sin(x/W*TAU*f2+ph2)*H*a2;
+    // crater depression
+    const dc=(x-craterX)/craterW;
+    if(Math.abs(dc)<1) y-=Math.cos(dc*Math.PI/2)*craterD;
+    // flat tee (smooth blend)
+    if(x<150){ const k=clamp((x-110)/40,0,1); y=lerp(groundY()+6,y,k); }
+    // cup plateau (flat core, smooth shoulders)
+    if(Math.abs(x-cupX)<78){ const k=clamp((Math.abs(x-cupX)-42)/36,0,1); y=lerp(groundY()-8,y,k); }
+    pts.push({x,y});
+  }
+  // smooth plateau edges
+  for(let p=0;p<2;p++) for(let k=1;k<pts.length-1;k++){
+    if(Math.abs(pts[k].x-cupX)<52) pts[k].y=pts[k-1].y*.2+pts[k].y*.4+pts[k+1].y*.4;
+  }
+  const cup={x:cupX,y:pts[Math.round(cupX/8)].y,r:12};
+  ball={x:60,y:pts[Math.round(60/8)].y-9,r:8,vx:0,vy:0,moving:false,rest:0};
+  terr={pts,cup,bumpers,w,par:2+Math.min(2,Math.floor(i/3))+(rng()<.4?1:0)};
+  shots=0;done=false;sinkT=-1;sight=false;sightUsed=false;confetti=[];
+  buildTerrainCache();
+  refreshHUD();
+}
+function buildTerrainCache(){
+  if(!terr)return;
+  tCache=terr.pts;
+}
+function terrainY(x){
+  const pts=tCache;
+  const k=clamp(x/8,0,pts.length-2);
+  const i=Math.floor(k),t=k-i;
+  return lerp(pts[i].y,pts[i+1].y,t);
+}
+function terrainAngle(x){
+  const d=6;
+  return Math.atan2(terrainY(x+d)-terrainY(x-d),2*d);
+}
+
+/* ---------- physics ---------- */
+function updateBall(dt){
+  const b=ball;if(!b.moving||done)return;
+  const g=terr.w.g;
+  const steps=Math.max(1,Math.ceil(Math.hypot(b.vx,b.vy)*dt/5));
+  const sd=dt/steps;
+  for(let s=0;s<steps;s++){
+    b.vy+=g*sd;
+    b.x+=b.vx*sd;b.y+=b.vy*sd;
+    // ceiling containment
+    if(b.y<-30&&b.vy<0){b.y=-30;b.vy*=-.45;}
+    // side walls: bounce softly, far out = OOB handled on rest
+    if(b.x<b.r+4){b.x=b.r+4;b.vx=Math.abs(b.vx)*.6;}
+    if(b.x>W-b.r-4){b.x=W-b.r-4;b.vx=-Math.abs(b.vx)*.6;}
+    // terrain
+    const ty=terrainY(b.x);
+    if(b.y+b.r>ty){
+      const ang=terrainAngle(b.x);
+      const nx=-Math.sin(ang),ny=Math.cos(ang); // surface normal (up)
+      b.y=ty-b.r;
+      const vn=b.vx*nx+b.vy*ny;
+      if(vn<0){
+        // 硬着陆反弹，轻接触完全吸收（防止陡坡微弹跳抖动）
+        const rest=Math.abs(vn)>150?.5:0;
+        b.vx-=(1+rest)*vn*nx; b.vy-=(1+rest)*vn*ny;
+        if(Math.abs(vn)>60){Sfx.land(vn);hap(6);}
+      }
+      // ground friction
+      b.vx*=Math.pow(.972,sd*60);
+      if(Math.abs(b.vy)<24)b.vy=0;
+    }
+    // settle detection
+    if(Math.hypot(b.vx,b.vy)<14 && b.y+b.r>=terrainY(b.x)-2.5){
+      b.rest+=sd;
+      if(b.rest>.35){b.vx=b.vy=0;b.moving=false;break;}
+    } else b.rest=0;
+    // bumpers
+    for(const p of terr.bumpers){
+      const dx=b.x-p.x,dy=b.y-p.y,d=Math.hypot(dx,dy),min=b.r+p.r;
+      if(d<min){
+        const nx2=dx/(d||1),ny2=dy/(d||1);
+        b.x=p.x+nx2*min;b.y=p.y+ny2*min;
+        const sp=Math.max(Math.hypot(b.vx,b.vy)*1.05,260);
+        const a2=Math.atan2(ny2,nx2)+rnd(-.35,.35);
+        b.vx=Math.cos(a2)*sp;b.vy=Math.sin(a2)*sp;
+        Sfx.bumper();hap(10);
+      }
+    }
+    // cup
+    const c=terr.cup;
+    if(Math.abs(b.x-c.x)<c.r && Math.abs(b.y-(c.y-4))<c.r && Math.hypot(b.vx,b.vy)<190){
+      b.x=c.x;b.y=c.y-4;b.vx=b.vy=0;b.moving=false;done=true;sinkT=0;
+      Sfx.sink();hap([15,40,20]);
+      for(let i2=0;i2<26;i2++){const a=rnd(0,TAU),sp2=rnd(40,190);
+        confetti.push({x:c.x,y:c.y,vx:Math.cos(a)*sp2,vy:Math.sin(a)*sp2-60,t:0,life:rnd(.5,.9),color:['#FFC857','#B8A8FF','#FFF'][i2%3],r:rnd(2,4)});}
+      finishHole();
+      return;
+    }
+    if(Math.hypot(b.vx,b.vy)<6 && b.y+b.r>=terrainY(b.x)-1){
+      b.vx=b.vy=0;b.moving=false;
+      // resting out of bounds (below screen) check
+      if(b.y>H+80){penaltyReset();return;}
+      break;
+    }
+  }
+  if(b.y>H+200){ // rolled off bottom
+    penaltyReset();
+  }
+}
+function penaltyReset(){
+  Sfx.oob();toast('Lost ball! +1 penalty');
+  shots++;
+  ball.x=pendingStart.x;ball.y=pendingStart.y;ball.vx=ball.vy=0;ball.moving=false;
+  refreshHUD();
+}
+
+/* ---------- input ---------- */
+function canAim(){return state==='play'&&!ball.moving&&!done;}
+stage.addEventListener('pointerdown',e=>{
+  Sfx.ensure();
+  if(e.target.closest('button'))return;
+  if(!canAim())return;
+  aiming=true;aimStart={x:e.clientX,y:e.clientY};aimNow={x:e.clientX,y:e.clientY};
+});
+window.addEventListener('pointermove',e=>{if(aiming)aimNow={x:e.clientX,y:e.clientY};});
+window.addEventListener('pointerup',()=>{
+  if(!aiming)return;aiming=false;
+  const v=shotVec();if(!v)return;
+  pendingStart={x:ball.x,y:ball.y};
+  ball.vx=v.x;ball.vy=v.y;ball.moving=true;ball.rest=0;
+  shots++;sight=false;
+  Sfx.putt(v.pw);hap(10);
+  refreshHUD();
+});
+function shotVec(){
+  if(!aimStart||!aimNow)return null;
+  const dx=aimStart.x-aimNow.x,dy=aimStart.y-aimNow.y;
+  const d=Math.hypot(dx,dy);
+  if(d<14)return null;
+  const MAX=180;
+  const pw=clamp(d/MAX,0,1);
+  const v=terr.w.vmax*	pw;
+  return {x:dx/d*v,y:dy/d*v,pw};
+}
+
+/* ---------- trajectory preview ---------- */
+function drawPreview(){
+  if(!aiming||!canAim())return;
+  const v=shotVec();if(!v)return;
+  const b=ball,g=terr.w.g;
+  let px=b.x,py=b.y,vx=v.x,vy=v.y;
+  const simDt=1/60;
+  const steps=sight?200:85;
+  ctx.fillStyle='rgba(255,255,255,.9)';
+  for(let i=0;i<steps;i++){
+    vy+=g*simDt;px+=vx*simDt;py+=vy*simDt;
+    if(py>terrainY(px)){ // landing marker
+      ctx.globalAlpha=1;
+      ctx.strokeStyle=terr.w.accent;ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.arc(px,py,7+Math.sin(tGlobal*6)*1.5,0,TAU);ctx.stroke();
+      ctx.globalAlpha=1;
+      break;
+    }
+    if(i%5===0){
+      ctx.globalAlpha=Math.max(.12,1-i/steps);
+      ctx.beginPath();ctx.arc(px,py,2.6,0,TAU);ctx.fill();
+    }
+  }
+  ctx.globalAlpha=1;
+  // power ring
+  ctx.strokeStyle=v.pw>.85?'#FF6B6B':terr.w.accent;
+  ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(b.x,b.y,b.r+6,-Math.PI/2,-Math.PI/2+v.pw*TAU);ctx.stroke();
+}
+
+/* ---------- draw ---------- */
+function draw(){
+  const w=terr?terr.w:WORLDS[0];
+  const skyTop=state==='menu'?WORLDS[0].sky[0]:w.sky[0];
+  const skyBot=state==='menu'?WORLDS[0].sky[1]:w.sky[1];
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,skyTop);g.addColorStop(1,skyBot);
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // stars / scenery
+  ctx.fillStyle='#fff';
+  for(let i=0;i<26;i++){
+    const sx=(i*97.31)%W,sy=(i*173.7)%(H*.55);
+    ctx.globalAlpha=.2+.4*Math.abs(Math.sin(tGlobal*.7+i));
+    ctx.beginPath();ctx.arc(sx,sy,.9,0,TAU);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  // big celestial body decor
+  const cx2=W*.78,cy2=H*.16;
+  const cg=ctx.createRadialGradient(cx2,cy2,4,cx2,cy2,54);
+  cg.addColorStop(0,w.accent);cg.addColorStop(.5,'rgba(255,255,255,.15)');cg.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx2,cy2,54,0,TAU);ctx.fill();
+
+  if(!terr){ctx.restore&&0;return;}
+  ctx.save();
+  // terrain
+  ctx.beginPath();
+  ctx.moveTo(-10,H+10);
+  ctx.lineTo(terr.pts[0].x,terr.pts[0].y);
+  for(const p of terr.pts)ctx.lineTo(p.x,p.y);
+  ctx.lineTo(W+10,H+10);ctx.closePath();
+  const tg=ctx.createLinearGradient(0,H*.4,0,H);
+  tg.addColorStop(0,w.ground);tg.addColorStop(1,'rgba(0,0,0,.55)');
+  ctx.fillStyle=tg;ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(terr.pts[0].x,terr.pts[0].y);
+  for(const p of terr.pts)ctx.lineTo(p.x,p.y);
+  ctx.stroke();
+  // bumpers
+  for(const p of terr.bumpers){
+    ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.arc(p.x+2,p.y+3,p.r,0,TAU);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.fill();
+    ctx.fillStyle=w.accent;ctx.beginPath();ctx.arc(p.x,p.y,p.r-4,0,TAU);ctx.fill();
+  }
+  // cup + flag
+  const c=terr.cup;
+  ctx.fillStyle='#0A081C';
+  ctx.beginPath();ctx.ellipse(c.x,c.y-2,c.r,c.r*.75,0,0,TAU);ctx.fill();
+  ctx.strokeStyle=done?'#FFC857':'rgba(255,255,255,.5)';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.ellipse(c.x,c.y-2,c.r,c.r*.75,0,0,TAU);ctx.stroke();
+  const wave=Math.sin(tGlobal*3)*2.5;
+  ctx.strokeStyle='#EDEBFF';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(c.x,c.y-4);ctx.lineTo(c.x,c.y-46);ctx.stroke();
+  ctx.fillStyle='#FF6B6B';
+  ctx.beginPath();ctx.moveTo(c.x,c.y-46);ctx.lineTo(c.x+22+wave,c.y-39);ctx.lineTo(c.x,c.y-31);ctx.closePath();ctx.fill();
+  // ball
+  if(!done||sinkT<0.4){
+    const b=ball;
+    ctx.fillStyle='rgba(0,0,0,.3)';
+    ctx.beginPath();ctx.ellipse(b.x+2,b.y+3,b.r,b.r*.8,0,0,TAU);ctx.fill();
+    const bg2=ctx.createRadialGradient(b.x-3,b.y-3,1,b.x,b.y,b.r);
+    bg2.addColorStop(0,'#fff');bg2.addColorStop(1,'#C9C4B4');
+    ctx.fillStyle=bg2;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill();
+  }
+  // confetti
+  for(const q of confetti){
+    ctx.globalAlpha=1-q.t/q.life;
+    ctx.fillStyle=q.color;
+    ctx.beginPath();ctx.arc(q.x,q.y,q.r,0,TAU);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  ctx.restore();
+  drawPreview();
+}
+
+/* ---------- round flow ---------- */
+const gridChar=(s2,p)=>{ if(s2===1)return '⛳'; const d=s2-p;
+  if(d<=-2)return '🔥'; if(d===-1)return '🟢'; if(d===0)return '✅';
+  if(d===1)return '🟡'; if(d===2)return '🟠'; return '🔴';};
+const starsFor=d=>d<=-2?3:d===-1?2:d===0?1:0;
+function resultName(d,s2){
+  if(s2===1)return 'ACE! ⛳';
+  if(d<=-3)return 'ALBATROSS!'; if(d===-2)return 'EAGLE!'; if(d===-1)return 'BIRDIE!';
+  if(d===0)return 'PAR'; if(d===1)return 'BOGEY'; if(d===2)return 'DOUBLE BOGEY'; return '+'+d;
+}
+function refreshHUD(){
+  $('#world-name').textContent=terr.w.name+' · '+terr.w.fact;
+  $('#hud-hole').textContent=(holeIdx+1)+'/'+HOLES;
+  $('#hud-par').textContent=terr.par;
+  $('#hud-strokes').textContent=shots;
+  $('#btn-hint').style.display=sightUsed?'none':'flex';
+}
+function finishHole(){
+  const d=shots-terr.par,stars=starsFor(d);
+  results.push({s:shots,p:terr.par});
+  totalStars+=stars;store.set('stars',totalStars);
+  Ads.runsSince++;
+  const last=holeIdx===HOLES-1;
+  $('#res-name').textContent=resultName(d,shots);
+  $('#res-stars').textContent='⭐'.repeat(stars)||'·';
+  $('#res-detail').textContent=shots+' shot'+(shots>1?'s':'')+' · par '+terr.par+' · '+terr.w.name;
+  $('#btn-next').textContent=last?'SEE RESULTS':'NEXT HOLE';
+  setTimeout(()=>{ if(stars>0)Sfx.star(); $('#banner').classList.remove('hidden'); },550);
+}
+function nextHole(){
+  $('#banner').classList.add('hidden');
+  holeIdx++;
+  const go=()=>{buildHole(holeIdx);};
+  if(holeIdx===3||holeIdx===6||holeIdx===9){
+    state='transition';
+    Ads.maybeInterstitial(()=>{state='play';go();});
+  } else go();
+}
+function startRound(){
+  holeIdx=0;results=[];roundActive=true;
+  buildHole(0);
+  state='play';
+  $('#menu').classList.add('hidden');
+  $('#summary').classList.add('hidden');
+  $('#hud').classList.add('show');
+  Sfx.ensure();
+}
+function finishRound(){
+  const totS=results.reduce((a,r)=>a+r.s,0),totP=results.reduce((a,r)=>a+r.p,0);
+  const diff=totS-totP;
+  const diffStr=diff===0?'EVEN':(diff>0?'+':'−')+Math.abs(diff);
+  if(bestDiff==null||diff<bestDiff){bestDiff=diff;store.set('best',diff);}
+  $('#sum-diff').textContent=diffStr;
+  $('#sum-diff').style.color=diff<0?'#5EE6A8':diff===0?'#FFC857':'#FF9B85';
+  $('#sum-sub').textContent=totS+' shots · par '+totP+' · '+totalStars+'⭐ total';
+  const grid=$('#grid');grid.innerHTML='';
+  results.forEach(r=>{const s2=document.createElement('div');s2.textContent=gridChar(r.s,r.p);grid.appendChild(s2);});
+  state='summary';
+  $('#hud').classList.add('show');
+  $('#summary').classList.remove('hidden');
+  refreshMenu();
+}
+
+/* ---------- share ---------- */
+async function shareRound(){
+  Sfx.ui();
+  const totS=results.length?results.reduce((a,r)=>a+r.s,0):0;
+  const totP=results.length?results.reduce((a,r)=>a+r.p,0):0;
+  const diff=totS-totP;
+  const diffStr=diff===0?'EVEN':(diff>0?'+':'−')+Math.abs(diff);
+  const text=`LUNAR GOLF 🌙 — tour diff ${diffStr} (${totalStars}⭐). Golf across the solar system — beat that!`;
+  const c=document.createElement('canvas');c.width=900;c.height=1350;
+  const x=c.getContext('2d');
+  const gg=x.createLinearGradient(0,0,0,1350);
+  gg.addColorStop(0,'#0B0B26');gg.addColorStop(1,'#251A4A');
+  x.fillStyle=gg;x.fillRect(0,0,900,1350);
+  // moon
+  const mx=450,my=420;
+  const mg=x.createRadialGradient(mx-40,my-40,10,mx,my,190);
+  mg.addColorStop(0,'#EDEBFF');mg.addColorStop(1,'#8E8AB8');
+  x.fillStyle=mg;x.beginPath();x.arc(mx,my,175,0,TAU);x.fill();
+  x.fillStyle='rgba(0,0,0,.12)';
+  [[-60,-30,26],[50,40,34],[70,-70,18],[-30,80,20]].forEach(([ox,oy,r])=>{x.beginPath();x.arc(mx+ox,my+oy,r,0,TAU);x.fill();});
+  // flag on moon
+  x.strokeStyle='#EDEBFF';x.lineWidth=6;
+  x.beginPath();x.moveTo(mx,my-170);x.lineTo(mx,my-280);x.stroke();
+  x.fillStyle='#FF6B6B';
+  x.beginPath();x.moveTo(mx,my-280);x.lineTo(mx+70,my-258);x.lineTo(mx,my-236);x.closePath();x.fill();
+  x.textAlign='center';
+  x.fillStyle='#EDEBFF';
+  x.font='900 90px ui-rounded,-apple-system,system-ui,sans-serif';
+  x.fillText('LUNAR GOLF',450,190);
+  x.font='900 230px ui-rounded,-apple-system,system-ui,sans-serif';
+  x.fillStyle='#FFC857';
+  x.fillText(diffStr,450,830);
+  x.font='800 40px ui-rounded,-apple-system,system-ui,sans-serif';
+  x.fillText(`${totS} shots · ${totalStars}⭐`,450,910);
+  x.font='700 36px ui-rounded,-apple-system,system-ui,sans-serif';
+  x.fillStyle='#FFC857';
+  x.fillText('Golf across the solar system 🌙⛳',450,1270);
+  try{
+    const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+    const file=new File([blob],'lunargolf.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text});return;}
+    if(navigator.share){await navigator.share({text});return;}
+  }catch(e){}
+  const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='lunargolf.png';a.click();
+  toast('Result card saved 📸');
+}
+
+/* ---------- UI ---------- */
+let toastT=null;
+function toast(m){const el=$('#toast');el.textContent=m;el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),1700);}
+function refreshMenu(){
+  $('#menu-best').textContent=bestDiff==null?'—':(bestDiff>0?'+':'−')+Math.abs(bestDiff);
+  $('#menu-stars').textContent=totalStars;
+}
+$('#btn-play').addEventListener('click',()=>{Sfx.ui();startRound();});
+$('#btn-next').addEventListener('click',()=>{Sfx.ui();nextHole();});
+$('#btn-home').addEventListener('click',()=>{Sfx.ui();goHome();});
+$('#btn-quit').addEventListener('click',()=>{Sfx.ui();goHome();});
+$('#btn-share').addEventListener('click',shareRound);
+$('#menu-share').addEventListener('click',()=>{Sfx.ui();toast('Finish a tour to share it! 🌙');});
+function goHome(){
+  state='menu';terr=null;roundActive=false;
+  $('#hud').classList.remove('show');
+  $('#banner').classList.add('hidden');
+  $('#summary').classList.add('hidden');
+  $('#menu').classList.remove('hidden');
+  refreshMenu();
+}
+function toggleSound(){
+  Sfx.on=!Sfx.on;store.set('sound',Sfx.on);
+  $('#menu-mute').textContent=Sfx.on?'🔊':'🔇';
+  if(Sfx.on){Sfx.ensure();Sfx.ui();}
+}
+$('#menu-mute').addEventListener('click',toggleSound);
+$('#howto-link').addEventListener('click',()=>{Sfx.ui();$('#howto').classList.remove('hidden');});
+$('#howto-ok').addEventListener('click',()=>{Sfx.ui();$('#howto').classList.add('hidden');});
+$('#btn-hint').addEventListener('click',()=>{
+  if(state!=='play'||sightUsed)return;
+  Sfx.ui();
+  Ads.showRewarded(()=>{sight=true;sightUsed=true;refreshHUD();toast('Precision Sight on!');},()=>{});
+});
+
+/* ---------- loop ---------- */
+$('#menu-mute').textContent=Sfx.on?'🔊':'🔇';
+refreshMenu();
+resize();
+let last=performance.now();
+function frame(now){
+  try{
+    const dt=Math.min((now-last)/1000,.05);last=now;
+    tGlobal+=dt;
+    if(ball)updateBall(dt);
+    if(sinkT>=0)sinkT+=dt;
+    for(const q of confetti){q.t+=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt;}
+    confetti=confetti.filter(q=>q.t<q.life);
+    draw();
+  }catch(e){console.error('frame error:',e);}
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
