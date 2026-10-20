@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://taamoo.com'
 # Utility files that live at the web root but are not crawlable pages:
 # Google Search Console verification files are standalone by design.
-EXCLUDED_HTML = {'googlea8c0b6289ffc7074.html'}
+EXCLUDED_HTML = {'googlea8c0b6289ffc7074.html', '404.html'}
 class Page(HTMLParser):
     def __init__(self, source):
         super().__init__(convert_charrefs=True)
@@ -28,6 +28,8 @@ class Page(HTMLParser):
         if tag in ('img', 'script', 'link'):
             asset = a.get('src') or (a.get('href') if tag == 'link' and a.get('rel') == 'stylesheet' else None)
             if asset: self.links.append(asset)
+            if tag == 'img' and a.get('srcset'):
+                self.links.extend(item.strip().split()[0] for item in a['srcset'].split(',') if item.strip())
         if tag == 'title' or (tag == 'script' and a.get('type') == 'application/ld+json'):
             self.capture = tag; self.buffer = ''
     def handle_data(self, data):
@@ -84,6 +86,9 @@ def main():
     listed = [n.text for n in sitemap.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
     if set(listed) != set(pages) or len(listed) != len(pages): errors.append('Sitemap must list every canonical HTML page once')
     if 'Sitemap: '+BASE+'/sitemap.xml' not in (ROOT / 'robots.txt').read_text(): errors.append('Missing sitemap in robots.txt')
+    missing_page = Page((ROOT / '404.html').read_text()) if (ROOT / '404.html').exists() else None
+    if missing_page and 'noindex' not in ','.join(missing_page.metas.get('robots', [])):
+        errors.append('Custom 404 page must not be indexed')
     if errors: raise SystemExit('\n'.join(errors))
     print(f'PASS: {len(pages)} pages; unique metadata, canonical and OG URLs, JSON-LD parsing, local links/assets/fragments, homepage reachability, sitemap coverage and robots declaration.')
 if __name__ == '__main__': main()

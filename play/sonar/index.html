@@ -353,11 +353,11 @@ resize();
 
 /* ---------- maze ---------- */
 let COLS=7,ROWS=10,cell=0,ox=0,oy=0;
-let grid=null;          // grid[y][x] = {n,s,e,w, seen:0}  seen=剩余可见时间
+let grid=null;          // grid[y][x] = {n,s,e,w, seen:0}  seen=time left visible
 let player=null,exitCell=null,creatures=[],pings=[];
 let depth=0,state='menu',best=store.get('best',0);
 let charges=3,maxCharges=3,rechargeT=0;
-let moveQ=null,moveT=0,px=0,py=0,tx=0,ty=0; // px,py = 动画位置(像素)
+let moveQ=null,moveT=0,px=0,py=0,tx=0,ty=0; // px,py = animated position (pixels)
 let burstUsed=false,tGlobal=0,heartT=0,exitPulseT=0;
 let tut=true;
 
@@ -375,7 +375,7 @@ function genMaze(cols,rows){
     c[y][x][a]=0;c[y+dy][x+dx][b]=0;c[y+dy][x+dx].v=1;
     stack.push([x+dx,y+dy]);
   }
-  // 打通少量环路，避免纯树迷宫太线性
+  // punch a few extra loops so the maze isn't a purely linear tree
   let loops=Math.floor(cols*rows*.06);
   while(loops>0){
     const x=Math.floor(Math.random()*cols),y=Math.floor(Math.random()*rows);
@@ -406,7 +406,7 @@ function bfs(sx,sy){
   return dist;
 }
 function stepToward(fromX,fromY,toX,toY){
-  // 沿 BFS 路径走一格
+  // take one step along the BFS path
   const dist=bfs(toX,toY);
   const c=grid[fromY][fromX];
   let bx=fromX,by=fromY,bd=dist[fromX+','+fromY]??1e9;
@@ -472,7 +472,7 @@ function drawCharges(){
 /* ---------- movement ---------- */
 function tryMove(dx,dy){
   if(state!=='play')return;
-  if(Math.abs(px-tx)>1||Math.abs(py-ty)>1)return; // 移动动画中
+  if(Math.abs(px-tx)>1||Math.abs(py-ty)>1)return; // move animation in progress
   const c=grid[player.y][player.x];
   if(dx===1&&c.e)return; if(dx===-1&&c.w)return;
   if(dy===1&&c.s)return; if(dy===-1&&c.n)return;
@@ -498,12 +498,12 @@ function updateCreatures(dt){
         c.moveT=c.awake?rnd(.5,.9):rnd(1.6,2.8);
         if(c.awake&&c.heard){
           const [nx2,ny2]=stepToward(c.x,c.y,c.heard.x,c.heard.y);
-          if(nx2===c.x&&ny2===c.y){c.heard=null;} // 到达聆听点，徘徊
+          if(nx2===c.x&&ny2===c.y){c.heard=null;} // reached the heard spot, now wander
           else{c.x=nx2;c.y=ny2;c.tx=cx(c.x);c.ty=cy(c.y);}
         }
       }
     }
-    // 心跳提示（距离近）
+    // heartbeat warning (close by)
     const dCells=Math.abs(c.x-player.x)+Math.abs(c.y-player.y);
     if(dCells<=2&&c.awake){
       heartT-=dt;
@@ -514,18 +514,18 @@ function updateCreatures(dt){
 
 /* ---------- reveal model ---------- */
 function reveal(){
-  // 声呐波揭示：网格记录剩余可见时间
+  // sonar wave reveal: each cell stores its remaining visible time
   for(const p of pings){
     const R=p.r;
     for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
       const wx=cx(x),wy=cy(y);
       const d=Math.hypot(wx-p.x,wy-p.y);
       if(d<=R){
-        const age=p.t-(d/340); // 波前经过此格后的时间
+        const age=p.t-(d/340); // time since the wavefront passed this cell
         if(age>0) grid[y][x].seen=Math.max(grid[y][x].seen, 1.6-age);
       }
     }
-    // 生物被波照亮（直接由 pings 绘制时计算）
+    // creatures lit by the wave (computed directly from pings at draw time)
   }
 }
 
@@ -606,7 +606,7 @@ stage.addEventListener('pointermove',e=>{
       else tryMove(0,Math.sign(dy));
     }
   } else if(pMoved){
-    // 持续拖动 = 连续移动
+    // held drag = keep moving
     const now=Date.now();
     if(now-lastMove>150){
       lastMove=now;
@@ -634,7 +634,7 @@ function draw(dt){
   if(state==='menu'){drawMenuBg();return;}
   if(!grid)return;
 
-  // 扩散声呐波
+  // expanding sonar waves
   for(const p of pings){
     p.t+=dt;p.r=p.t*340;
     ctx.strokeStyle=`rgba(124,232,255,${Math.max(0,.5-p.t*.5)})`;
@@ -645,7 +645,7 @@ function draw(dt){
 
   reveal();
 
-  // 墙壁：按 cell seen 值绘制发光描边
+  // walls: glowing strokes drawn by each cell's seen value
   ctx.lineCap='round';
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
     const c=grid[y][x];
@@ -665,7 +665,7 @@ function draw(dt){
     c.seen-=dt;
   }
 
-  // 出口：绿点，缓慢自脉冲（无需声呐即可感知方向）
+  // exit: green dot with a slow self-pulse (sense its direction without sonar)
   exitPulseT+=dt;
   const ep=(exitPulseT%3.2)/3.2;
   const ex=cx(exitCell.x),ey=cy(exitCell.y);
@@ -674,7 +674,7 @@ function draw(dt){
   ctx.fillStyle='rgba(94,230,168,.9)';
   ctx.beginPath();ctx.arc(ex,ey,3.5,0,TAU);ctx.fill();
 
-  // 生物（被波前照亮时短暂可见）
+  // creatures (briefly visible when lit by a wavefront)
   for(const c of creatures){
     let vis=0;
     for(const p of pings){
@@ -682,7 +682,7 @@ function draw(dt){
       const age=p.t-(d/340);
       if(age>0&&age<1.4)vis=Math.max(vis,1-age/1.4);
     }
-    if(c.awake){vis=Math.max(vis,.12+.08*Math.sin(tGlobal*5+c.pulse));} // 醒着时极微弱可见
+    if(c.awake){vis=Math.max(vis,.12+.08*Math.sin(tGlobal*5+c.pulse));} // barely visible while awake
     if(vis>0){
       ctx.fillStyle=`rgba(255,107,107,${vis})`;
       ctx.beginPath();ctx.arc(c.px,c.py,5,0,TAU);ctx.fill();
@@ -691,7 +691,7 @@ function draw(dt){
     }
   }
 
-  // 玩家
+  // player
   px=lerp(px,tx,Math.min(1,dt*11));
   py=lerp(py,ty,Math.min(1,dt*11));
   const glow=ctx.createRadialGradient(px,py,0,px,py,26);
@@ -701,7 +701,7 @@ function draw(dt){
   ctx.beginPath();ctx.arc(px,py,5.5,0,TAU);ctx.fill();
 }
 function drawMenuBg(){
-  // 菜单背景：偶发涟漪
+  // menu background: occasional ripples
   tGlobal+=1/60;
   if(Math.random()<.008)pings.push({x:rnd(W*.2,W*.8),y:rnd(H*.2,H*.6),r:0,t:0});
   for(const p of pings){
@@ -709,7 +709,7 @@ function drawMenuBg(){
     ctx.strokeStyle=`rgba(124,232,255,${Math.max(0,.4-p.t*.4)})`;
     ctx.lineWidth=1.6;
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.stroke();
-    // 假墙点缀
+    // fake wall accents
     ctx.strokeStyle=`rgba(124,232,255,${Math.max(0,.25-p.t*.25)})`;
     for(let i=0;i<7;i++){
       const a=i*1.7,d2=(i*53)%90+30;
@@ -737,7 +737,7 @@ $('#btn-revive').addEventListener('click',()=>{
   $('#dead').classList.add('hidden');
   Ads.showRewarded(()=>{
     usedRevive=true;Sfx.reviveFx?Sfx.reviveFx():Sfx.exit();
-    // 清走附近的听者并送玩家回到起点方向
+    // clear nearby Listeners and send the player back toward the start
     creatures=creatures.filter(c=>Math.abs(c.x-player.x)+Math.abs(c.y-player.y)>4);
     for(const c of creatures){c.awake=false;c.heard=null;}
     player.x=0;player.y=0;tx=cx(0);ty=cy(0);

@@ -338,7 +338,7 @@ const GRAV=760;
 
 function layout(){
   HAND.x=W/2;HAND.y=H-72;
-  HAND.L=(HAND.y-64)*.82;   // 绳长足以扫到屏幕上部
+  HAND.L=(HAND.y-64)*.82;   // string long enough to sweep the upper screen
   stars=[];
   for(let i=0;i<34;i++)stars.push({x:(i*97.31)%W,y:(i*173.7)%(H*.6),tw:rnd(0,TAU),r:rnd(.6,1.5)});
 }
@@ -349,13 +349,13 @@ function buildWave(n){
   wave=n;waveCleared=false;
   $('#hud-wave').textContent=n;
   targets=[];
-  // 灯泡沿以手为圆心的弧带摆放：任何甩击都会扫过弧带 → 连锁自然发生
+  // bulbs sit on arc bands centered on the hand: any fling sweeps a band → chains happen naturally
   const bands=[HAND.L*.5,HAND.L*.76,HAND.L*.97];
   const count=Math.min(12,5+n);
   for(let i=0;i<count;i++){
     const mover=n>=2&&Math.random()<.3+n*.05;
     const R=bands[i%3]+rnd(-24,24);
-    // 先取屏幕内的 x，再反解上半圆角度 → 保证全部落在屏幕内
+    // pick an on-screen x first, then solve back for the upper-arc angle → everything stays on screen
     const xt=rnd(50,W-50);
     const a=-Math.acos(clamp((xt-HAND.x)/R,-1,1));
     const x=HAND.x+Math.cos(a)*R,y=HAND.y+Math.sin(a)*R;
@@ -371,10 +371,10 @@ function updateYoyo(dt){
   if(y.mode==='fly'){
     y.t+=dt;
     y.vy+=GRAV*dt;
-    // 串子方向的空气阻力小一点，手感更飘
+    // a touch of air drag for a floatier fling feel
     y.vx*=Math.pow(.995,dt*60);y.vy*=Math.pow(.995,dt*60);
     y.x+=y.vx*dt;y.y+=y.vy*dt;
-    // 绳约束：摆动！
+    // string constraint: swing!
     const dx=y.x-HAND.x,dy=y.y-HAND.y,d=Math.hypot(dx,dy);
     if(d>HAND.L){
       const nx=dx/d,ny=dy/d;
@@ -383,12 +383,12 @@ function updateYoyo(dt){
       if(vn>0){y.vx-=vn*nx;y.vy-=vn*ny;}
       y.vx*=.999;y.vy*=.999;
     }
-    // 出界拉回
+    // off screen → reel back in
     if(y.x<-60||y.x>W+60||y.y<-80){y.mode='return';}
-    // 慢速悬挂 → 收回
+    // hanging too slow → return
     if(y.t>1.1&&Math.hypot(y.vx,y.vy)<46)y.mode='return';
     if(y.t>4)y.mode='return';
-    // 打击判定
+    // hit detection
     for(const t2 of targets){
       if(!t2.alive||t2.pop>0)continue;
       if(Math.hypot(y.x-t2.x,y.y-t2.y)<t2.r+11){
@@ -406,7 +406,7 @@ function updateYoyo(dt){
       }
     }
     if(!waveCleared&&targets.length&&targets.every(t2=>!t2.alive)){
-      waveCleared=true;   // 防止 buildWave 延迟期间重复触发
+      waveCleared=true;   // prevent double-firing during the buildWave delay
       Sfx.wave();hap([12,30,12]);
       toast('WAVE CLEAR! +'+(50*wave));
       score+=50*wave;updateScore();

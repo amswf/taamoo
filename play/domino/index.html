@@ -350,18 +350,18 @@ function loadLevel(n){
   const rng=mulberry32(90210+n*131);
   board={x:12,y:64,w:W-24,h:H-64-96};
   pipe={x:board.x+26,y:board.y+16};
-  // 铃铛位置：从右上渐进到左下/远角
+  // Bell position: drifts from top-right toward bottom-left / far corner
   const t=(n-1)/(LEVELS-1);
   const side=rng()<.5?-1:1;
   bell={x:clamp(pipe.x+ (W-90)*(side>0? (.55+.4*t) : (0.45-.4*t)),board.x+40,board.x+board.w-40),
         y:board.y+40+(board.h-110)*(.3+.65*t),r:17};
-  // 障碍柱
+  // Obstacle pegs
   items=[];
   const pegs=1+Math.floor(n/2);
   for(let i=0;i<pegs;i++){
     items.push({type:'peg',x:board.x+60+rng()*(board.w-120),y:board.y+50+rng()*(board.h-140),r:10+rng()*5,a:0});
   }
-  // 预算
+  // Item budget
   budget={ramp:2+(n>2?1:0),bumper:n>=2?1+(n>4?1:0):1,fan:n>=3?1:0,domino:n>=4?1+(n>5?1:0):0};
   used={ramp:0,bumper:0,fan:0,domino:0};
   refreshHUD();
@@ -443,7 +443,7 @@ function updateBall(b,dt){
           it.toppled=true;
           Sfx.topple();hap(12);
           topples.push({it,t:0});
-          // 掉出一个新球
+          // Drops a fresh ball
           balls.push({x:it.x+6,y:it.y-26,vx:rnd(20,60),vy:-40,r:8,rest:0});
         }
       }
@@ -510,7 +510,7 @@ stage.addEventListener('pointerdown',e=>{
   const r=stage.getBoundingClientRect();
   const x=e.clientX-r.left,y=e.clientY-r.top;
   ptrDown={x,y};moved=false;
-  // 拾取已放置道具（非模拟时）
+  // Pick up a placed item (only when not simulating)
   if(!sim){
     for(let i=items.length-1;i>=0;i--){
       const it=items[i];
@@ -541,17 +541,17 @@ stage.addEventListener('pointerup',e=>{
   const x=e.clientX-r.left,y=e.clientY-r.top;
   if(dragging){
     if(!moved&&dragging.it.type==='ramp'){
-      dragging.it.a+=Math.PI/12; // 点按旋转 15°
+      dragging.it.a+=Math.PI/12; // tap rotates 15°
       Sfx.rotate();
     }
     dragging=null;ptrDown=null;
     return;
   }
   ptrDown=null;
-  // 模拟中点按 = 无操作
+  // Taps during simulation do nothing
 });
 
-/* tray drag-to-place（事件委托：托盘按钮统一在 stage 上处理） */
+/* tray drag-to-place (event delegation: all tray buttons are handled on stage) */
 const trayRectFor = type => document.querySelector('.tool[data-tool="'+type+'"]').getBoundingClientRect();
 let trayDrag=null;
 stage.addEventListener('pointerdown',e=>{
@@ -616,7 +616,7 @@ $('#btn-next').addEventListener('click',()=>{
 
 /* ---------- draw ---------- */
 function draw(dt){
-  // 纸面背景
+  // Paper background
   ctx.fillStyle='#FBF3E2';ctx.fillRect(0,0,W,H);
   ctx.fillStyle='rgba(58,50,38,.04)';
   for(let y=0;y<H;y+=28)ctx.fillRect(0,y,W,1);
@@ -709,7 +709,7 @@ function roundRect(x,y,w,h,r){
   ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
 }
 function drawMenuDecor(){
-  // 迷你多米诺装饰
+  // Mini domino decoration
   const bx=W/2,by=H*.78;
   ctx.save();ctx.translate(bx,by);
   for(let i=0;i<5;i++){

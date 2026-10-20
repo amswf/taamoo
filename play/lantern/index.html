@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -82,16 +82,16 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
 #toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 <title>Lantern — Light puzzle Browser Game | Taamoo</title>
-<meta name="description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<meta name="description" content="Move lanterns through the dark to create a path for a creature that follows the light. English interface.">
 <link rel="canonical" href="https://taamoo.com/play/lantern/">
 <meta property="og:title" content="Lantern — Light puzzle Browser Game | Taamoo">
-<meta property="og:description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<meta property="og:description" content="Move lanterns through the dark to create a path for a creature that follows the light. English interface.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Taamoo Studio">
 <meta property="og:url" content="https://taamoo.com/play/lantern/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lantern — Light puzzle Browser Game | Taamoo">
-<meta name="twitter:description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<meta name="twitter:description" content="Move lanterns through the dark to create a path for a creature that follows the light. English interface.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -112,7 +112,7 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
       "description": "Move lanterns through the dark to create a path for a creature that follows the light.",
       "genre": "Light puzzle",
       "gamePlatform": "Web browser",
-      "inLanguage": "zh-CN",
+      "inLanguage": "en",
       "publisher": {
         "@id": "https://taamoo.com/#studio"
       }
@@ -150,32 +150,32 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
 <canvas id="cv"></canvas>
 <div id="ui">
   <div id="scr-title" class="scr show">
-    <div class="logo">灯影小径</div>
-    <div class="sub">拖动灯笼 · 光到之处皆是路</div>
+    <div class="logo">Lantern</div>
+    <div class="sub">Drag the lantern · light makes the path</div>
     <div style="height:46px"></div>
-    <button class="btn" id="bt-start">点 灯</button>
-    <nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#lantern">Lantern guide</a></nav><div class="foot">共 40 关 · 拾满星屑，方为圆满</div>
+    <button class="btn" id="bt-start">Light Up</button>
+    <nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#lantern">Lantern guide</a></nav><div class="foot">40 levels · gather all the stardust to make it whole</div>
   </div>
   <div id="scr-levels" class="scr">
-    <h1>选 关</h1>
-    <div class="hint">走出一关,点亮下一关</div>
+    <h1>Levels</h1>
+    <div class="hint">Clear one level to light up the next</div>
     <div id="chapters"></div>
   </div>
   <div id="hud">
     <button class="hbtn" id="bt-back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div id="hud-mid"><div id="hud-lv">第 1 关</div><div id="hud-gems">星屑 <b id="gems-n">0</b> / 3</div></div>
+    <div id="hud-mid"><div id="hud-lv">Level 1</div><div id="hud-gems">Stardust <b id="gems-n">0</b> / 3</div></div>
     <button class="hbtn" id="bt-restart"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
     <button class="hbtn" id="bt-mute" style="margin-left:8px"><svg id="ic-snd" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wv" d="M16 9a4 4 0 0 1 0 6"/></svg></button>
   </div>
   <div id="toast"></div>
   <div id="scr-win" class="scr">
     <div class="card">
-      <div id="win-title">抵达出口</div>
+      <div id="win-title">Made it out!</div>
       <div id="win-sub"></div>
       <div id="stars"><span>★</span><span>★</span><span>★</span></div>
       <div class="row">
-        <button class="btn ghost" id="bt-menu">选关</button>
-        <button class="btn" id="bt-next">下一关</button>
+        <button class="btn ghost" id="bt-menu">Levels</button>
+        <button class="btn" id="bt-next">Next Level</button>
       </div>
     </div>
   </div>
@@ -242,13 +242,13 @@ const SAVE={key:'lantern.v1',stars:{},mute:false,
 SAVE.load();SND.mute=SAVE.mute;
 
 /* ================= levels =================
-   # 墙  . 地  S 起点  E 出口  * 星屑
-   L 白灯 A 红灯 Z 蓝灯   C白晶 D白门 r红晶 R红门 b蓝晶 B蓝门
-   F 萤火(自发光)  m 火柴  J 轨灯  - | 灯轨
+   # wall  . floor  S start  E exit  * stardust
+   L white lantern  A red lantern  Z blue lantern   C white crystal  D white door  r red crystal  R red door  b blue crystal  B blue door
+   F firefly (glows on its own)  m match  J rail lantern  - | lantern rail
 */
 const CHAPS=[
- {name:'一 · 提灯',levels:[
-  {n:'初光',hint:'拖动灯笼照亮道路,点击亮处行走',m:[
+ {name:'One · The Lantern',levels:[
+  {n:'First Light',hint:'Drag the lantern to light the way, then tap a lit tile to walk',m:[
    '#########',
    '#S..*..E#',
    '#.......#',
@@ -256,7 +256,7 @@ const CHAPS=[
    '#.......#',
    '#L......#',
    '#########']},
-  {n:'绕墙',hint:'灯笼要一路陪着它',m:[
+  {n:'Round the Wall',hint:'The lantern has to stay close the whole way',m:[
    '#########',
    '#S..#..E#',
    '#...#...#',
@@ -265,7 +265,7 @@ const CHAPS=[
    '#.......#',
    '#..*.L..#',
    '#########']},
-  {n:'门洞',m:[
+  {n:'The Doorway',m:[
    '#########',
    '#S...#..#',
    '#....#..#',
@@ -274,7 +274,7 @@ const CHAPS=[
    '#.......#',
    '#.*..L.E#',
    '#########']},
-  {n:'蛇径',m:[
+  {n:'Serpent Path',m:[
    '#########',
    '#S..#..E#',
    '#..*#.*.#',
@@ -283,7 +283,7 @@ const CHAPS=[
    '#.......#',
    '#*.L....#',
    '#########']},
-  {n:'十字',m:[
+  {n:'Crossroads',m:[
    '#########',
    '#S..#..E#',
    '#...#...#',
@@ -292,7 +292,7 @@ const CHAPS=[
    '#.....*.#',
    '#.*..L..#',
    '#########']},
-  {n:'回环',m:[
+  {n:'The Loop',m:[
    '#########',
    '#S.....E#',
    '#####.###',
@@ -300,7 +300,7 @@ const CHAPS=[
    '####.####',
    '#...*.L.#',
    '#########']},
-  {n:'口袋',m:[
+  {n:'Pocket',m:[
    '#########',
    '#S..#.L.#',
    '#.*.#.#*#',
@@ -309,7 +309,7 @@ const CHAPS=[
    '#.*...#E#',
    '#...#...#',
    '#########']},
-  {n:'长廊',m:[
+  {n:'Long Hall',m:[
    '#########',
    '#S..*...#',
    '#.#####.#',
@@ -318,7 +318,7 @@ const CHAPS=[
    '#...#.#E#',
    '#*..#.L.#',
    '#########']},
-  {n:'折返',m:[
+  {n:'Double Back',m:[
    '#########',
    '#S..#..*#',
    '#..*#...#',
@@ -327,7 +327,7 @@ const CHAPS=[
    '#.#.#.#.#',
    '#..*..#E#',
    '#########']},
-  {n:'一章 · 深巷',m:[
+  {n:'Chapter 1 · Deep Alley',m:[
    '#########',
    '#S..#.**#',
    '#.#.#...#',
@@ -337,8 +337,8 @@ const CHAPS=[
    '#..*..#E#',
    '#########']},
  ]},
- {name:'二 · 同色',levels:[
-  {n:'初晶',hint:'同色灯笼照亮同色水晶，水晶会开门',m:[
+ {name:'Two · True Colors',levels:[
+  {n:'First Crystal',hint:'Match lantern color to crystal — lit crystals open their doors',m:[
    '#########',
    '#S..*#..#',
    '#...*#..#',
@@ -347,7 +347,7 @@ const CHAPS=[
    '#.....#.#',
    '#..*....#',
    '#########']},
-  {n:'双灯',hint:'一盏守水晶，一盏照路',m:[
+  {n:'Two Lanterns',hint:'One to hold the crystal, one to light the path',m:[
    '#########',
    '#S..#..E#',
    '#..*#.*.#',
@@ -356,7 +356,7 @@ const CHAPS=[
    '#...#...#',
    '#..*#...#',
    '#########']},
-  {n:'接力',m:[
+  {n:'Relay',m:[
    '#########',
    '#S..D..E#',
    '#...#...#',
@@ -365,7 +365,7 @@ const CHAPS=[
    '#L.....L#',
    '#..*....#',
    '#########']},
-  {n:'岔路',m:[
+  {n:'The Fork',m:[
    '#########',
    '#S..#...#',
    '#...#...#',
@@ -374,7 +374,7 @@ const CHAPS=[
    '#.*.#.#.#',
    '#...#..*#',
    '#########']},
-  {n:'壁龛',m:[
+  {n:'Alcove',m:[
    '#########',
    '#S..#..E#',
    '#...#...#',
@@ -383,7 +383,7 @@ const CHAPS=[
    '#L.C#.#.#',
    '#...#.*.#',
    '#########']},
-  {n:'一石二鸟',m:[
+  {n:'Two Birds, One Stone',m:[
    '#########',
    '#S.D.D.E#',
    '#...#...#',
@@ -392,7 +392,7 @@ const CHAPS=[
    '#L..L...#',
    '#..*....#',
    '#########']},
-  {n:'锁廊',m:[
+  {n:'The Locked Hall',m:[
    '#########',
    '#S..#.E.#',
    '#.*.#.#*#',
@@ -401,7 +401,7 @@ const CHAPS=[
    '#...#...#',
    '#.*.#...#',
    '#########']},
-  {n:'锁链',m:[
+  {n:'The Chain',m:[
    '#########',
    '#S..#.E.#',
    '#.*.#.#*#',
@@ -410,7 +410,7 @@ const CHAPS=[
    '#L..C..*#',
    '#...#...#',
    '#########']},
-  {n:'三灯',m:[
+  {n:'Three Lanterns',m:[
    '#########',
    '#S.D.D.E#',
    '#...#...#',
@@ -419,7 +419,7 @@ const CHAPS=[
    '#L..L..L#',
    '#..*.*..#',
    '#########']},
-  {n:'二章 · 守灯人',m:[
+  {n:'Chapter 2 · The Lantern Keeper',m:[
    '#########',
    '#S..#.E.#',
    '#.*.#.#*#',
@@ -429,8 +429,8 @@ const CHAPS=[
    '#...D...#',
    '#########']},
  ]},
- {name:'三 · 流彩',levels:[
-  {n:'赤晶',hint:'红灯配红晶，蓝灯配蓝晶',m:[
+ {name:'Three · Flowing Colors',levels:[
+  {n:'Crimson Crystal',hint:'Red lantern for red crystal, blue lantern for blue',m:[
    '#########',
    '#S..*#..#',
    '#...*#..#',
@@ -439,7 +439,7 @@ const CHAPS=[
    '#.....#.#',
    '#..*....#',
    '#########']},
-  {n:'双色',m:[
+  {n:'Two Colors',m:[
    '#########',
    '#S..R..E#',
    '#...#...#',
@@ -448,7 +448,7 @@ const CHAPS=[
    '#..#..*.#',
    '#..r.L..#',
    '#########']},
-  {n:'提萤',hint:'捡起萤火虫，它会给小家伙照亮',m:[
+  {n:'Carry the Firefly',hint:'Pick up the firefly and it will glow for the little one',m:[
    '#########',
    '#S..#..E#',
    '#.*.#.#*#',
@@ -457,7 +457,7 @@ const CHAPS=[
    '#...#.#.#',
    '#.*..L..#',
    '#########']},
-  {n:'暗河',m:[
+  {n:'The Dark River',m:[
    '#########',
    '#S..R..E#',
    '#...#...#',
@@ -466,7 +466,7 @@ const CHAPS=[
    '#..#..*.#',
    '#..r....#',
    '#########']},
-  {n:'红蓝渡',m:[
+  {n:'Red & Blue Crossing',m:[
    '#########',
    '#S..*..E#',
    '#...R..B#',
@@ -475,7 +475,7 @@ const CHAPS=[
    '#..#.b..#',
    '#..r....#',
    '#########']},
-  {n:'群萤',m:[
+  {n:'Firefly Swarm',m:[
    '#########',
    '#S..#..E#',
    '#.**#..*#',
@@ -484,7 +484,7 @@ const CHAPS=[
    '#..#.#..#',
    '#...L...#',
    '#########']},
-  {n:'三色',m:[
+  {n:'Three Colors',m:[
    '#########',
    '#S..D.B.#',
    '#..#.#..#',
@@ -493,7 +493,7 @@ const CHAPS=[
    '#C.L.Z.E#',
    '#*......#',
    '#########']},
-  {n:'萤与门',m:[
+  {n:'Firefly & Door',m:[
    '#########',
    '#S..R..E#',
    '#..#..*.#',
@@ -502,7 +502,7 @@ const CHAPS=[
    '#..*.L..#',
    '#*......#',
    '#########']},
-  {n:'惜光',m:[
+  {n:'Spare the Light',m:[
    '#########',
    '#S..#..E#',
    '#.*.#.#F#',
@@ -511,7 +511,7 @@ const CHAPS=[
    '#..#..r.#',
    '#*......#',
    '#########']},
-  {n:'三章 · 流彩',m:[
+  {n:'Chapter 3 · Flowing Colors',m:[
    '#########',
    '#S..#.E.#',
    '#.*.#.#*#',
@@ -521,8 +521,8 @@ const CHAPS=[
    '#...#*..#',
    '#########']},
  ]},
- {name:'四 · 守时',levels:[
-  {n:'灯轨',hint:'拖动灯轨上的灯，沿轨滑行',m:[
+ {name:'Four · Burning Time',levels:[
+  {n:'The Lantern Rail',hint:'Drag the rail lantern and it slides along the track',m:[
    '#########',
    '#S..|..E#',
    '#..*|.*.#',
@@ -531,7 +531,7 @@ const CHAPS=[
    '#..*|...#',
    '#.......#',
    '#########']},
-  {n:'横轨',m:[
+  {n:'Cross Rail',m:[
    '#########',
    '#S..*..E#',
    '#.......#',
@@ -540,7 +540,7 @@ const CHAPS=[
    '#.......#',
    '#.......#',
    '#########']},
-  {n:'火柴',hint:'点击火柴点燃，它只能烧一阵子',m:[
+  {n:'The Match',hint:'Tap a match to light it — it only burns for a little while',m:[
    '#########',
    '#S.*#..E#',
    '#...#...#',
@@ -549,7 +549,7 @@ const CHAPS=[
    '#.*.#.*.#',
    '#L......#',
    '#########']},
-  {n:'双柴',m:[
+  {n:'Two Matches',m:[
    '#########',
    '#S..L*..#',
    '#.#####.#',
@@ -558,7 +558,7 @@ const CHAPS=[
    '#m..#.#E#',
    '#..m#..*#',
    '#########']},
-  {n:'轨与门',m:[
+  {n:'Rail & Door',m:[
    '#########',
    '#S..#..E#',
    '#..*#.*.#',
@@ -567,7 +567,7 @@ const CHAPS=[
    '#L......#',
    '#*......#',
    '#########']},
-  {n:'守时',hint:'火柴亮着水晶才开门，抓紧走过',m:[
+  {n:'Mind the Time',hint:'The door opens only while the match burns — hurry across',m:[
    '#########',
    '#S..D..E#',
    '#..*#.*.#',
@@ -576,7 +576,7 @@ const CHAPS=[
    '#.......#',
    '#*.L....#',
    '#########']},
-  {n:'轨与萤',m:[
+  {n:'Rail & Firefly',m:[
    '#########',
    '#S.J...E#',
    '#..|.*..#',
@@ -585,7 +585,7 @@ const CHAPS=[
    '#..|.*..#',
    '#.......#',
    '#########']},
-  {n:'双轨',m:[
+  {n:'Twin Rails',m:[
    '#########',
    '#S|....E#',
    '#.|..*..#',
@@ -594,7 +594,7 @@ const CHAPS=[
    '#.|.#.#.#',
    '#*J...#.#',
    '#########']},
-  {n:'柴与萤',m:[
+  {n:'Match & Firefly',m:[
    '#########',
    '#S..#..E#',
    '#.*.#.#F#',
@@ -603,7 +603,7 @@ const CHAPS=[
    '#..*.*..#',
    '#...L...#',
    '#########']},
-  {n:'终章 · 守灯',m:[
+  {n:'Final Chapter · Keeping the Light',m:[
    '#########',
    '#S..D..E#',
    '#..*#.*.#',
@@ -1116,19 +1116,19 @@ function startLevel(idx){
   curIdx=idx;G=createLevel(idx);state='play';
   computeLit(G);
   show(null);hud.classList.add('show');updGems();
-  $('hud-lv').textContent=`第 ${idx+1} 关 · ${LEVELS[idx].n}`;
+  $('hud-lv').textContent=`Level ${idx+1} · ${LEVELS[idx].n}`;
   if(G.hint)setTimeout(()=>{if(G&&G.idx===idx)showToast(G.hint,3200);},600);
 }
 function showWin(g){
   state='win';
   const st=g.gemsGot>=3?3:g.gemsGot>=2?2:1;
   SAVE.set(g.idx,st);
-  $('win-sub').textContent=`星屑 ${g.gemsGot} / 3`;
+  $('win-sub').textContent=`Stardust ${g.gemsGot} / 3`;
   const spans=[...$('stars').children];
   for(const s of spans)s.classList.remove('on');
   show(scrWin);hud.classList.remove('show');
   spans.forEach((s,i)=>{if(i<st)setTimeout(()=>{s.classList.add('on');SND.tap();},350+i*280);});
-  $('bt-next').textContent=g.idx>=LEVELS.length-1?'回选关':'下一关';
+  $('bt-next').textContent=g.idx>=LEVELS.length-1?'Back to Levels':'Next Level';
 }
 function goLevels(){state='levels';buildChapters();show(scrLevels);hud.classList.remove('show');}
 $('bt-start').addEventListener('click',()=>{SND.ensure();SND.tap();goLevels();});
@@ -1230,7 +1230,7 @@ function frame(now){
         const p=1.8,a=clamp(G.intro>1.3?(p-G.intro)/.5:G.intro/.8,0,1);
         ctx.fillStyle=`rgba(242,236,221,${a*.9})`;
         ctx.font='600 17px -apple-system,"PingFang SC",sans-serif';ctx.textAlign='center';
-        ctx.fillText(`第 ${G.idx+1} 关 · ${LEVELS[G.idx].n}`,VW/2,G.oy-30);
+        ctx.fillText(`Level ${G.idx+1} · ${LEVELS[G.idx].n}`,VW/2,G.oy-30);
       }
     }else{
       drawAmbient(ambT);

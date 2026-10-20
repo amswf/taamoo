@@ -430,7 +430,7 @@ function updateBall(dt){
       b.y=ty-b.r;
       const vn=b.vx*nx+b.vy*ny;
       if(vn<0){
-        // 硬着陆反弹，轻接触完全吸收（防止陡坡微弹跳抖动）
+        // Hard landings bounce, soft touches are fully absorbed (prevents micro-bounce jitter on steep slopes)
         const rest=Math.abs(vn)>150?.5:0;
         b.vx-=(1+rest)*vn*nx; b.vy-=(1+rest)*vn*ny;
         if(Math.abs(vn)>60){Sfx.land(vn);hap(6);}
