@@ -8,6 +8,9 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://taamoo.com'
+# Utility files that live at the web root but are not crawlable pages:
+# Google Search Console verification files are standalone by design.
+EXCLUDED_HTML = {'googlea8c0b6289ffc7074.html'}
 class Page(HTMLParser):
     def __init__(self, source):
         super().__init__(convert_charrefs=True)
@@ -40,7 +43,7 @@ def url_for(path):
     return BASE + '/' + (relative[:-10] if relative.endswith('index.html') else relative)
 
 def main():
-    pages = {url_for(p): Page(p.read_text()) for p in ROOT.rglob('*.html') if '.git' not in p.parts and 'graphify-out' not in p.parts}
+    pages = {url_for(p): Page(p.read_text()) for p in ROOT.rglob('*.html') if '.git' not in p.parts and 'graphify-out' not in p.parts and p.name not in EXCLUDED_HTML}
     errors = []; titles = set(); descriptions = set(); inbound = {url: [] for url in pages}
     for url, page in pages.items():
         def require(ok, message):
