@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>灯影小径 · Lantern</title>
 <style>
 :root{
   --ink:#f2ecdd; --dim:rgba(242,236,221,.55);
@@ -82,8 +81,72 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
   opacity:0;transition:all .4s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
+<title>Lantern — Light puzzle Browser Game | Taamoo</title>
+<meta name="description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<link rel="canonical" href="https://taamoo.com/play/lantern/">
+<meta property="og:title" content="Lantern — Light puzzle Browser Game | Taamoo">
+<meta property="og:description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Taamoo Studio">
+<meta property="og:url" content="https://taamoo.com/play/lantern/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lantern — Light puzzle Browser Game | Taamoo">
+<meta name="twitter:description" content="Move lanterns through the dark to create a path for a creature that follows the light. Chinese interface.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://taamoo.com/#studio",
+      "name": "Taamoo Studio",
+      "url": "https://taamoo.com/",
+      "email": "support@taamoo.com",
+      "description": "A one-person independent game studio making mobile games and browser prototypes."
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://taamoo.com/play/lantern/#game",
+      "name": "Lantern",
+      "url": "https://taamoo.com/play/lantern/",
+      "description": "Move lanterns through the dark to create a path for a creature that follows the light.",
+      "genre": "Light puzzle",
+      "gamePlatform": "Web browser",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://taamoo.com/#studio"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://taamoo.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://taamoo.com/games/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Lantern",
+          "item": "https://taamoo.com/play/lantern/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+
 <canvas id="cv"></canvas>
 <div id="ui">
   <div id="scr-title" class="scr show">
@@ -91,7 +154,7 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
     <div class="sub">拖动灯笼 · 光到之处皆是路</div>
     <div style="height:46px"></div>
     <button class="btn" id="bt-start">点 灯</button>
-    <div class="foot">共 40 关 · 拾满星屑，方为圆满</div>
+    <nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#lantern">Lantern guide</a></nav><div class="foot">共 40 关 · 拾满星屑，方为圆满</div>
   </div>
   <div id="scr-levels" class="scr">
     <h1>选 关</h1>

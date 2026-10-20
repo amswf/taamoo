@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>萤火之池 · Firefly Pond</title>
 <style>
 :root{
   --ink:#eaf4ff; --dim:rgba(234,244,255,.55);
@@ -89,8 +88,72 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
 #scr-fail .fcard{text-align:center;animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
 #scr-fail .ft{font-size:20px;letter-spacing:4px;margin-bottom:18px;text-shadow:0 0 20px rgba(120,180,255,.4)}
 </style>
+<title>Firefly Pond — Ripple puzzle Browser Game | Taamoo</title>
+<meta name="description" content="Tap the pond to send ripples through the water and guide fireflies into crystal lamps. Chinese interface.">
+<link rel="canonical" href="https://taamoo.com/play/ripple/">
+<meta property="og:title" content="Firefly Pond — Ripple puzzle Browser Game | Taamoo">
+<meta property="og:description" content="Tap the pond to send ripples through the water and guide fireflies into crystal lamps. Chinese interface.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Taamoo Studio">
+<meta property="og:url" content="https://taamoo.com/play/ripple/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Firefly Pond — Ripple puzzle Browser Game | Taamoo">
+<meta name="twitter:description" content="Tap the pond to send ripples through the water and guide fireflies into crystal lamps. Chinese interface.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://taamoo.com/#studio",
+      "name": "Taamoo Studio",
+      "url": "https://taamoo.com/",
+      "email": "support@taamoo.com",
+      "description": "A one-person independent game studio making mobile games and browser prototypes."
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://taamoo.com/play/ripple/#game",
+      "name": "Firefly Pond",
+      "url": "https://taamoo.com/play/ripple/",
+      "description": "Tap the pond to send ripples through the water and guide fireflies into crystal lamps.",
+      "genre": "Ripple puzzle",
+      "gamePlatform": "Web browser",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://taamoo.com/#studio"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://taamoo.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://taamoo.com/games/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Firefly Pond",
+          "item": "https://taamoo.com/play/ripple/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+
 <canvas id="cv"></canvas>
 <div id="ui">
   <div id="scr-title" class="scr show">
@@ -98,7 +161,7 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
     <div class="sub">点水成漪 · 引萤入灯</div>
     <div style="height:46px"></div>
     <button class="btn" id="bt-start">入 池</button>
-    <div class="foot">共 40 关 · 涟漪越少，星光越盛</div>
+    <nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#ripple">Firefly Pond guide</a></nav><div class="foot">共 40 关 · 涟漪越少，星光越盛</div>
   </div>
   <div id="scr-levels" class="scr">
     <h1>选 关</h1>

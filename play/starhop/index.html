@@ -6,7 +6,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0A0E23">
-<title>STARHOP — one tap · endless climb</title>
 <style>
   :root{
     --ink:#EAF0FF; --dim:#8A93B8; --coral:#FF6B6B; --coral2:#FF8E53;
@@ -106,8 +105,72 @@
   .step p{font-size:14px;font-weight:600;color:var(--dim);line-height:1.45}
   .step p b{color:var(--ink)}
 </style>
+<title>Starhop — One tap arcade Browser Game | Taamoo</title>
+<meta name="description" content="Tap to leave one planet’s orbit and launch toward the next planet in an endless gravity hopping game. Play in your browser, no download.">
+<link rel="canonical" href="https://taamoo.com/play/starhop/">
+<meta property="og:title" content="Starhop — One tap arcade Browser Game | Taamoo">
+<meta property="og:description" content="Tap to leave one planet’s orbit and launch toward the next planet in an endless gravity hopping game. Play in your browser, no download.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Taamoo Studio">
+<meta property="og:url" content="https://taamoo.com/play/starhop/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Starhop — One tap arcade Browser Game | Taamoo">
+<meta name="twitter:description" content="Tap to leave one planet’s orbit and launch toward the next planet in an endless gravity hopping game. Play in your browser, no download.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://taamoo.com/#studio",
+      "name": "Taamoo Studio",
+      "url": "https://taamoo.com/",
+      "email": "support@taamoo.com",
+      "description": "A one-person independent game studio making mobile games and browser prototypes."
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://taamoo.com/play/starhop/#game",
+      "name": "Starhop",
+      "url": "https://taamoo.com/play/starhop/",
+      "description": "Tap to leave one planet’s orbit and launch toward the next planet in an endless gravity hopping game.",
+      "genre": "One tap arcade",
+      "gamePlatform": "Web browser",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://taamoo.com/#studio"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://taamoo.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://taamoo.com/games/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Starhop",
+          "item": "https://taamoo.com/play/starhop/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+
 <script>
   /* native shell (Capacitor): immersive fullscreen */
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
@@ -131,7 +194,7 @@
       <div id="logo">STARHOP</div>
       <div id="tagline">one tap · endless climb</div>
     </div>
-    <div id="menu-mid">
+    <div id="menu-mid"><nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#starhop">Starhop guide</a></nav>
       <button id="btn-play" class="btn">▶&nbsp; PLAY</button>
       <div class="chip">BEST&nbsp;<b id="menu-best">0</b>&nbsp;·&nbsp;PLANETS&nbsp;<b id="menu-life">0</b></div>
       <button id="howto-link">how to play</button>

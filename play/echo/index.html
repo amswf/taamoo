@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>回响双子 · Echo Twins</title>
 <style>
 :root{
   --ink:#3d3852; --dim:rgba(61,56,82,.55);
@@ -91,8 +90,72 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
   opacity:0;transition:all .4s;pointer-events:none;white-space:nowrap;box-shadow:0 6px 20px rgba(61,56,82,.12)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
+<title>Echo Twins — Time replay puzzle Browser Game | Taamoo</title>
+<meta name="description" content="Record your movement, then cooperate with a replay of your earlier actions to complete each puzzle. Chinese interface.">
+<link rel="canonical" href="https://taamoo.com/play/echo/">
+<meta property="og:title" content="Echo Twins — Time replay puzzle Browser Game | Taamoo">
+<meta property="og:description" content="Record your movement, then cooperate with a replay of your earlier actions to complete each puzzle. Chinese interface.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Taamoo Studio">
+<meta property="og:url" content="https://taamoo.com/play/echo/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Echo Twins — Time replay puzzle Browser Game | Taamoo">
+<meta name="twitter:description" content="Record your movement, then cooperate with a replay of your earlier actions to complete each puzzle. Chinese interface.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://taamoo.com/#studio",
+      "name": "Taamoo Studio",
+      "url": "https://taamoo.com/",
+      "email": "support@taamoo.com",
+      "description": "A one-person independent game studio making mobile games and browser prototypes."
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://taamoo.com/play/echo/#game",
+      "name": "Echo Twins",
+      "url": "https://taamoo.com/play/echo/",
+      "description": "Record your movement, then cooperate with a replay of your earlier actions to complete each puzzle.",
+      "genre": "Time replay puzzle",
+      "gamePlatform": "Web browser",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://taamoo.com/#studio"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://taamoo.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://taamoo.com/games/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Echo Twins",
+          "item": "https://taamoo.com/play/echo/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+
 <canvas id="cv"></canvas>
 <div id="ui">
   <div id="scr-title" class="scr show">
@@ -100,7 +163,7 @@ button{font-family:inherit;color:var(--ink);background:none;border:none;cursor:p
     <div class="sub">先走一遍 · 再与过去的自己同台</div>
     <div style="height:46px"></div>
     <button class="btn" id="bt-start">开 始</button>
-    <div class="foot">共 36 关 · 录下足迹,合拍演出</div>
+    <nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#echo">Echo Twins guide</a></nav><div class="foot">共 36 关 · 录下足迹,合拍演出</div>
   </div>
   <div id="scr-levels" class="scr">
     <h1>选 关</h1>

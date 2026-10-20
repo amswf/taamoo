@@ -6,7 +6,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#FFF8EC">
-<title>DOMINO — the chain workshop</title>
 <style>
   :root{
     --ink:#3A3226; --dim:#9A8E79; --paper:#FFF8EC; --card:#FFFFFF; --coral:#F07A5A; --gold:#F5B840; --mint:#4CBFA6;
@@ -90,8 +89,72 @@
     font-weight:700;opacity:0;transition:all .25s;z-index:15;pointer-events:none;white-space:nowrap}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
+<title>Domino — Chain reaction puzzle Browser Game | Taamoo</title>
+<meta name="description" content="Build a chain reaction with ramps, fans and dominoes to send a ball from a pipe to a bell. Play in your browser, no download.">
+<link rel="canonical" href="https://taamoo.com/play/domino/">
+<meta property="og:title" content="Domino — Chain reaction puzzle Browser Game | Taamoo">
+<meta property="og:description" content="Build a chain reaction with ramps, fans and dominoes to send a ball from a pipe to a bell. Play in your browser, no download.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Taamoo Studio">
+<meta property="og:url" content="https://taamoo.com/play/domino/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Domino — Chain reaction puzzle Browser Game | Taamoo">
+<meta name="twitter:description" content="Build a chain reaction with ramps, fans and dominoes to send a ball from a pipe to a bell. Play in your browser, no download.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://taamoo.com/#studio",
+      "name": "Taamoo Studio",
+      "url": "https://taamoo.com/",
+      "email": "support@taamoo.com",
+      "description": "A one-person independent game studio making mobile games and browser prototypes."
+    },
+    {
+      "@type": "VideoGame",
+      "@id": "https://taamoo.com/play/domino/#game",
+      "name": "Domino",
+      "url": "https://taamoo.com/play/domino/",
+      "description": "Build a chain reaction with ramps, fans and dominoes to send a ball from a pipe to a bell.",
+      "genre": "Chain reaction puzzle",
+      "gamePlatform": "Web browser",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://taamoo.com/#studio"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://taamoo.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Games",
+          "item": "https://taamoo.com/games/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Domino",
+          "item": "https://taamoo.com/play/domino/"
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
+
+
 <div id="stage">
 <script>
   if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
@@ -122,7 +185,7 @@
       <div id="logo">DOMINO<br><em>workshop</em></div>
       <div id="tagline">build the chain · ring the bell</div>
     </div>
-    <div id="menu-mid">
+    <div id="menu-mid"><nav aria-label="Game navigation" style="font:12px system-ui;background:#FFF8EC;color:#3A3226;border-radius:20px;padding:6px 12px;margin:12px 0;white-space:nowrap"><a style="color:inherit" href="/games/">All games</a> · <a style="color:inherit" href="/games/#domino">Domino guide</a></nav>
       <button id="btn-play-menu" class="btn">🔧&nbsp; START BUILDING</button>
       <div class="hudchip">⭐ <b id="menu-stars">0</b>/24</div>
       <button id="howto-link">how to play</button>
