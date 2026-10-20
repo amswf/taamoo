@@ -4,7 +4,7 @@
 
 ## 1. 品牌名
 
-- **名称：Taamoo Studio**（正文/正式场合）；视觉词标统一小写：**taamoo studio**（与域名 taamoo.com 一致）
+- **名称：Taamoo Studio**（正文与视觉词标统一首字母大写：Taamoo Studio；域名 taamoo.com）
 - **名字故事**：taamoo 读起来像游戏里一颗豆子"啵嘤"弹起来的音效——轻巧、好玩、过耳不忘。名字本身就是一个玩心的小预告。
 - 域名：taamoo.com · 邮箱：support@taamoo.com
 
